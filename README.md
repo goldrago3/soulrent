@@ -31,6 +31,14 @@ Da Astro 7 `astro dev` gira in background: `npx astro dev status`,
   chiave manca in inglese o tedesco, il progetto non compila.
 - `src/lib/site.ts` — dati aziendali. Tutti i `[TODO]` da riempire stanno qui.
 
+## Prima di andare online
+
+Il dominio non è ancora stato acquistato. In `astro.config.mjs` il campo `site`
+vale `https://soulrent.invalid`: `.invalid` è un finale riservato che nessuno
+può registrare, quindi il segnaposto è impossibile da confondere con un
+indirizzo vero. Appena il dominio esiste, si cambia quella riga e basta:
+canonical, `hreflang` e Open Graph si aggiornano da soli su tutte le pagine.
+
 ## Stato
 
 Impalcatura: design system, layout e navigazione in tre lingue.
