@@ -1,0 +1,226 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   SouLRent — design tokens
+   Unica fonte dei colori del progetto (CLAUDE.md §5).
+   Nessun colore hardcoded altrove: la palette di default di Tailwind è
+   azzerata qui sotto, quindi una classe come `bg-red-500` semplicemente
+   non esiste e il build lo segnala.
+   ========================================================================== */
+
+@theme {
+  /* ---------- Colore ---------- */
+  --color-*: initial;
+
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-inherit: inherit;
+
+  --color-ink: #0f1113;                  /* base. Nero caldo — mai #000000 */
+  --color-bone: #f4f1ec;                 /* superfici chiare, testo su scuro — mai bianco puro */
+  --color-sea: #1b3a4b;                  /* secondario, sezione mare */
+  --color-brass: #b08d57;                /* accento — max 5% della superficie visibile */
+  --color-stone: #8a8781;                /* testo secondario */
+  --color-line: rgba(15, 17, 19, 0.14);  /* filetti */
+
+  /* Varianti aggiunte qui, non inline (§5), per rispettare il contrasto AA (§10).
+     Rapporti misurati:
+       stone su bone         3.18:1  solo testo ≥ 24 px, mai testo corrente
+       stone-strong su bone  4.71:1  testo secondario su fondo chiaro
+       brass su bone         2.74:1  mai testo: solo bordi e filetti
+       stone-soft su ink     6.74:1  testo secondario su fondo scuro
+       brass su ink          6.12:1  qui il testo in ottone è ammesso */
+  --color-stone-strong: #6e6b66;
+  --color-stone-soft: #9d9a94;
+  --color-line-invert: rgba(244, 241, 236, 0.18);
+
+  /* ---------- Tipografia (§6) ---------- */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
+
+  --text-*: initial;
+
+  /* h1 34 px @375 → 72 px @1280 */
+  --text-h1: clamp(2.125rem, 1.141rem + 4.2vw, 4.5rem);
+  --text-h1--line-height: 1.04;
+  --text-h1--letter-spacing: -0.015em;
+
+  /* h2 34 px → 40 px */
+  --text-h2: clamp(2.125rem, 1.97rem + 0.66vw, 2.5rem);
+  --text-h2--line-height: 1.12;
+  --text-h2--letter-spacing: -0.01em;
+
+  /* h3 — estensione della scala §6, serve a header, footer e schede */
+  --text-h3: 1.5rem;                     /* 24 px */
+  --text-h3--line-height: 1.25;
+
+  --text-lead: 1.3125rem;                /* 21 px — sommari */
+  --text-lead--line-height: 1.55;
+
+  --text-body: 1.0625rem;                /* 17 px */
+  --text-body--line-height: 1.7;
+
+  --text-small: 0.9375rem;               /* 15 px */
+  --text-small--line-height: 1.6;
+
+  --text-eyebrow: 0.75rem;               /* 12 px — unico maiuscoletto ammesso */
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.14em;
+
+  /* ---------- Spazio (§5) ---------- */
+  --spacing-section: 4.5rem;             /* 72 px mobile */
+  --spacing-section-lg: 7.5rem;          /* 120 px desktop */
+  --spacing-gutter: 1.25rem;
+  --spacing-gutter-lg: 2.5rem;
+
+  --container-page: 78rem;               /* 1248 px */
+  --container-prose: 40rem;              /* misura di lettura */
+
+  /* ---------- Angoli (§5) — massimo 4 px, i bottoni sono squadrati ---------- */
+  --radius-*: initial;
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+
+  /* ---------- Movimento (§5) — solo fade e translate, 400–600 ms, ease-out ---------- */
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+  --default-transition-duration: 400ms;
+  --default-transition-timing-function: var(--ease-editorial);
+
+  /* Nessuna ombra: gradienti, ombre decorative e glassmorphism sono vietati (§12). */
+  --shadow-*: initial;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-bone);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :root {
+    /* Colore dell'anello di focus. Le superfici scure lo invertono via
+       `surface-dark`. Non è ottone: brass su bone fa 2.74:1, sotto il 3:1
+       che WCAG 1.4.11 chiede agli indicatori di focus. */
+    --focus-ring: var(--color-ink);
+  }
+
+  /* Il focus è sempre visibile e non viene mai rimosso (§10). */
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-ink);
+    color: var(--color-bone);
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--color-line);
+  }
+
+  /* §5 e §10: prefers-reduced-motion rispettato ovunque. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ==========================================================================
+   Utility di progetto
+   ========================================================================== */
+
+/* Contenitore di pagina: larghezza massima e gutter coerenti ovunque. */
+@utility wrap {
+  width: 100%;
+  max-width: var(--container-page);
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+
+  @media (width >= 48rem) {
+    padding-inline: var(--spacing-gutter-lg);
+  }
+}
+
+/* Padding verticale delle sezioni: 72 px mobile, 120 px desktop (§5). */
+@utility section-y {
+  padding-block: var(--spacing-section);
+
+  @media (width >= 48rem) {
+    padding-block: var(--spacing-section-lg);
+  }
+}
+
+/* Superficie scura: fondo, testo e anello di focus cambiano insieme,
+   così non serve ricordarsi di invertire il focus caso per caso. */
+@utility surface-dark {
+  background-color: var(--color-ink);
+  color: var(--color-bone);
+  --focus-ring: var(--color-bone);
+}
+
+/* Visibile solo agli screen reader finché non riceve il focus. */
+@utility sr-only-focusable {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+
+  &:focus-visible {
+    position: fixed;
+    top: var(--spacing-gutter);
+    left: var(--spacing-gutter);
+    z-index: 100;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0.75rem 1.25rem;
+    overflow: visible;
+    clip-path: none;
+    background-color: var(--color-ink);
+    color: var(--color-bone);
+    border-radius: var(--radius-sm);
+  }
+}
