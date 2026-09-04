@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../i18n/ui';
+
+const lang = 'de' as const;
+const t = useTranslations(lang);
+---
+
+<BaseLayout lang={lang} route="home" title={t('home.title')} description={t('site.description')}>
+  {/* Impalcatura: la home vera arriva nella sessione dedicata alle sezioni. */}
+  <section class="wrap section-y">
+    <h1 class="text-h1 max-w-prose">[TODO copy: h1 della home, de]</h1>
+  </section>
+</BaseLayout>
