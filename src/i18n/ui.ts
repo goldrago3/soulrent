@@ -52,8 +52,10 @@ const it = {
   'footer.rights': 'Tutti i diritti riservati',
   'footer.vat': 'Partita IVA',
   'footer.base': 'Base operativa',
+  'footer.positioning': '[TODO copy: una riga di posizionamento per il footer IT, tono editoriale]',
 
   'home.title': '[TODO copy: title della home IT, max 60 caratteri]',
+  'home.h1': '[TODO copy: h1 della home IT]',
 } as const;
 
 export type UiKey = keyof typeof it;
@@ -100,8 +102,10 @@ const en: Dictionary = {
   'footer.rights': 'All rights reserved',
   'footer.vat': 'VAT number',
   'footer.base': 'Operating base',
+  'footer.positioning': '[TODO copy: one positioning line for the footer, EN, editorial tone]',
 
   'home.title': '[TODO copy: home title EN, max 60 characters]',
+  'home.h1': '[TODO copy: home h1, EN]',
 };
 
 const de: Dictionary = {
@@ -144,8 +148,10 @@ const de: Dictionary = {
   'footer.rights': 'Alle Rechte vorbehalten',
   'footer.vat': 'USt-IdNr.',
   'footer.base': 'Betriebsbasis',
+  'footer.positioning': '[TODO copy: eine Positionierungszeile für den Footer, DE, redaktioneller Ton]',
 
   'home.title': '[TODO copy: Home-Title DE, max 60 Zeichen]',
+  'home.h1': '[TODO copy: Home-H1, DE]',
 };
 
 export const ui = { it, en, de } as const satisfies Record<Lang, Dictionary>;
