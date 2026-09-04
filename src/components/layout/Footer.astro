@@ -1,0 +1,80 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import LangSwitcher from './LangSwitcher.astro';
+import { getPath, type Lang, type RouteKey } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import { footerCompany, footerExplore } from '../../lib/navigation';
+import { business } from '../../lib/site';
+
+interface Props {
+  lang: Lang;
+  route: RouteKey;
+}
+
+const { lang, route } = Astro.props;
+const t = useTranslations(lang);
+
+const year = new Date().getFullYear();
+
+const columns = [
+  { heading: t('footer.explore'), items: footerExplore },
+  { heading: t('footer.company'), items: footerCompany },
+] as const;
+---
+
+<footer class="surface-dark">
+  <div class="wrap section-y grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+    <div class="flex flex-col gap-4">
+      {/* [TODO] logo definitivo: per ora segnaposto testuale */}
+      <span class="font-display text-h3 leading-none">SouLRent</span>
+      <p class="text-small text-stone-soft">
+        [TODO copy: una riga di posizionamento per il footer, tono editoriale]
+      </p>
+    </div>
+
+    {
+      columns.map((column) => (
+        <nav aria-label={column.heading} class="flex flex-col gap-4">
+          <Eyebrow as="p" tone="invert">{column.heading}</Eyebrow>
+          <ul class="flex flex-col gap-3">
+            {column.items.map((item) => (
+              <li>
+                <a
+                  href={getPath(item.route, lang)}
+                  aria-current={route === item.route ? 'page' : undefined}
+                  class="text-small text-stone-soft transition-[color] duration-400 ease-editorial hover:text-bone"
+                >
+                  {t(item.label)}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))
+    }
+
+    <div class="flex flex-col gap-4">
+      <Eyebrow as="p" tone="invert">{t('footer.contact')}</Eyebrow>
+      <ul class="flex flex-col gap-3 text-small text-stone-soft">
+        <li>{business.email}</li>
+        <li>{business.telephone}</li>
+        <li>
+          {t('footer.base')}: {business.address.locality}, {business.address.region}
+        </li>
+      </ul>
+      <LangSwitcher lang={lang} route={route} tone="invert" class="mt-2 md:hidden" />
+    </div>
+  </div>
+
+  <div class="wrap border-t border-line-invert py-8">
+    <div class="flex flex-col gap-2 text-small text-stone-soft md:flex-row md:items-center md:justify-between">
+      <p>© {year} {business.name} — {t('footer.rights')}</p>
+      <p>{t('footer.vat')} {business.vatId}</p>
+    </div>
+    {/*
+      [TODO] link legali (privacy, cookie, condizioni di noleggio):
+      vanno aggiunti a src/i18n/routes.ts quando i testi esistono.
+      Non li linkiamo finché la pagina non c'è.
+    */}
+  </div>
+</footer>

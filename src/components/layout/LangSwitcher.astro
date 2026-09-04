@@ -1,0 +1,56 @@
+---
+import { getAlternates, type Lang, type RouteKey } from '../../i18n/routes';
+import { useTranslations, type UiKey } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  route: RouteKey;
+  tone?: 'default' | 'invert';
+  class?: string | undefined;
+}
+
+const { lang, route, tone = 'default', class: className } = Astro.props;
+const t = useTranslations(lang);
+
+// Le alternative vengono dalla mappa: da /flotta/auto si resta su /en/fleet/cars,
+// non si torna in home (§7).
+const alternates = getAlternates(route);
+
+const labels = {
+  it: 'lang.it',
+  en: 'lang.en',
+  de: 'lang.de',
+} as const satisfies Record<Lang, UiKey>;
+
+const tones = {
+  default: { active: 'text-ink border-brass', idle: 'text-stone-strong border-transparent hover:text-ink' },
+  invert: { active: 'text-bone border-brass', idle: 'text-stone-soft border-transparent hover:text-bone' },
+} as const;
+---
+
+<nav aria-label={t('lang.label')} class={className}>
+  <ul class="flex items-center gap-4">
+    {
+      alternates.map(({ lang: alt, path, hreflang }) => {
+        const isCurrent = alt === lang;
+        return (
+          <li>
+            <a
+              href={path}
+              hreflang={hreflang}
+              lang={hreflang}
+              aria-current={isCurrent ? 'true' : undefined}
+              class:list={[
+                'text-small border-b pb-0.5 transition-[color,border-color] duration-400 ease-editorial',
+                isCurrent ? tones[tone].active : tones[tone].idle,
+              ]}
+            >
+              <span class="sr-only">{t(labels[alt])}</span>
+              <span aria-hidden="true">{alt}</span>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>

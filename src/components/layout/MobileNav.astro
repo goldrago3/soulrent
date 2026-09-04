@@ -1,0 +1,206 @@
+---
+import LangSwitcher from './LangSwitcher.astro';
+import Button from '../ui/Button.astro';
+import { getPath, type Lang, type RouteKey } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import { primaryNav, secondaryNav } from '../../lib/navigation';
+
+interface Props {
+  lang: Lang;
+  route: RouteKey;
+}
+
+const { lang, route } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<button
+  type="button"
+  data-menu-trigger
+  aria-expanded="false"
+  aria-controls="mobile-nav"
+  class="-mr-2 inline-flex h-11 w-11 items-center justify-center rounded-sm text-ink lg:hidden"
+>
+  <span class="sr-only" data-menu-trigger-label>{t('menu.open')}</span>
+  <svg aria-hidden="true" focusable="false" width="22" height="12" viewBox="0 0 22 12" fill="none">
+    <path d="M0 1h22M0 11h22" stroke="currentColor" stroke-width="1.5"></path>
+  </svg>
+</button>
+
+<div
+  id="mobile-nav"
+  data-menu-panel
+  role="dialog"
+  aria-modal="true"
+  aria-label={t('menu.label')}
+  inert
+  class="pointer-events-none fixed inset-0 z-50 flex translate-y-2 flex-col overflow-y-auto bg-bone opacity-0 transition-[opacity,transform] duration-400 ease-editorial data-[open]:pointer-events-auto data-[open]:translate-y-0 data-[open]:opacity-100 lg:hidden"
+>
+  <div class="wrap flex h-16 shrink-0 items-center justify-between border-b border-line md:h-20">
+    {/* [TODO] logo definitivo: per ora segnaposto testuale */}
+    <span class="font-display text-h3 leading-none">SouLRent</span>
+    <button
+      type="button"
+      data-menu-close
+      class="-mr-2 inline-flex h-11 w-11 items-center justify-center rounded-sm text-ink"
+    >
+      <span class="sr-only">{t('menu.close')}</span>
+      <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M1 1l16 16M17 1L1 17" stroke="currentColor" stroke-width="1.5"></path>
+      </svg>
+    </button>
+  </div>
+
+  <nav aria-label={t('nav.label')} class="wrap flex-1 py-10">
+    <ul class="flex flex-col gap-6">
+      {
+        primaryNav.map((item) => (
+          <li>
+            <a
+              href={getPath(item.route, lang)}
+              aria-current={route === item.route ? 'page' : undefined}
+              class="font-display text-h3"
+            >
+              {t(item.label)}
+            </a>
+            {item.children && (
+              <ul class="mt-3 flex flex-col gap-2 border-l border-line pl-4">
+                {item.children.map((child) => (
+                  <li>
+                    <a
+                      href={getPath(child.route, lang)}
+                      aria-current={route === child.route ? 'page' : undefined}
+                      class="text-small text-stone-strong"
+                    >
+                      {t(child.label)}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+
+    <ul class="mt-10 flex flex-col gap-3 border-t border-line pt-8">
+      {
+        secondaryNav.map((item) => (
+          <li>
+            <a
+              href={getPath(item.route, lang)}
+              aria-current={route === item.route ? 'page' : undefined}
+              class="text-small text-stone-strong"
+            >
+              {t(item.label)}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <div class="wrap flex flex-col gap-6 border-t border-line py-8">
+    <Button href={getPath('enquiry', lang)} class="w-full">{t('nav.enquiry')}</Button>
+    <LangSwitcher lang={lang} route={route} />
+  </div>
+</div>
+
+<script>
+  // Menu mobile: JavaScript vanilla, nessun framework client (§3).
+  const trigger = document.querySelector<HTMLButtonElement>('[data-menu-trigger]');
+  const panel = document.querySelector<HTMLElement>('[data-menu-panel]');
+
+  if (trigger && panel) {
+    const closeButton = panel.querySelector<HTMLButtonElement>('[data-menu-close]');
+
+    /**
+     * Mentre il menu è aperto tutto ciò che non è il pannello esce dall'albero
+     * di accessibilità e dall'ordine di tabulazione. Si risale la catena dei
+     * genitori rendendo inerti i fratelli: così la modale resta l'unica cosa
+     * raggiungibile, ovunque il pannello si trovi nel DOM.
+     * Il marcatore serve a non riattivare elementi già inerti per altri motivi.
+     */
+    const setBackgroundInert = (state: boolean) => {
+      let node: HTMLElement = panel;
+      while (node.parentElement) {
+        const parent: HTMLElement = node.parentElement;
+        for (const sibling of Array.from(parent.children)) {
+          if (sibling === node || !(sibling instanceof HTMLElement)) continue;
+          if (state) {
+            if (sibling.inert) continue;
+            sibling.inert = true;
+            sibling.dataset.menuInerted = '';
+          } else if (sibling.dataset.menuInerted !== undefined) {
+            sibling.inert = false;
+            delete sibling.dataset.menuInerted;
+          }
+        }
+        node = parent;
+      }
+    };
+    const triggerLabel = trigger.querySelector<HTMLElement>('[data-menu-trigger-label]');
+    const openLabel = triggerLabel?.textContent ?? '';
+    const closeLabel = closeButton?.querySelector('span')?.textContent ?? openLabel;
+    const desktop = window.matchMedia('(min-width: 64rem)');
+
+    let isOpen = false;
+
+    const focusable = (): HTMLElement[] =>
+      Array.from(panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
+
+    const setOpen = (next: boolean, restoreFocus = true) => {
+      isOpen = next;
+      panel.toggleAttribute('data-open', next);
+      // `inert` (e non `visibility`) governa la raggiungibilità del pannello:
+      // ha effetto immediato, quindi il focus può entrare senza attendere il fade.
+      panel.inert = !next;
+      trigger.setAttribute('aria-expanded', String(next));
+      // Il blocco dello scroll è inline per non dipendere da una classe generata.
+      document.body.style.overflow = next ? 'hidden' : '';
+
+      setBackgroundInert(next);
+
+      if (triggerLabel) triggerLabel.textContent = next ? closeLabel : openLabel;
+
+      if (next) {
+        focusable()[0]?.focus();
+      } else if (restoreFocus) {
+        trigger.focus();
+      }
+    };
+
+    trigger.addEventListener('click', () => setOpen(!isOpen));
+    closeButton?.addEventListener('click', () => setOpen(false));
+
+    document.addEventListener('keydown', (event) => {
+      if (!isOpen) return;
+
+      if (event.key === 'Escape') {
+        setOpen(false);
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+
+      // Trappola del focus: il menu occupa l'intero schermo, dietro non si tabula.
+      const items = focusable();
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (!first || !last) return;
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    // Passando a desktop il menu non deve restare aperto sotto la barra.
+    desktop.addEventListener('change', (event) => {
+      if (event.matches && isOpen) setOpen(false, false);
+    });
+  }
+</script>

@@ -1,0 +1,60 @@
+---
+import LangSwitcher from './LangSwitcher.astro';
+import MobileNav from './MobileNav.astro';
+import Button from '../ui/Button.astro';
+import { getPath, type Lang, type RouteKey } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import { primaryNav } from '../../lib/navigation';
+
+interface Props {
+  lang: Lang;
+  route: RouteKey;
+}
+
+const { lang, route } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<header class="sticky top-0 z-40 border-b border-line bg-bone">
+  <div data-header-bar class="wrap flex h-16 items-center justify-between gap-6 md:h-20">
+    <a href={getPath('home', lang)} class="font-display text-h3 leading-none text-ink">
+      {/* [TODO] logo definitivo: per ora segnaposto testuale */}
+      SouLRent
+    </a>
+
+    <nav aria-label={t('nav.label')} class="hidden lg:block">
+      <ul class="flex items-center gap-8">
+        {
+          primaryNav.map((item) => {
+            const isActive =
+              route === item.route || (item.children?.some((child) => child.route === route) ?? false);
+            return (
+              <li>
+                <a
+                  href={getPath(item.route, lang)}
+                  aria-current={isActive ? 'page' : undefined}
+                  class:list={[
+                    'text-small border-b pb-1 transition-[color,border-color] duration-400 ease-editorial',
+                    isActive
+                      ? 'border-brass text-ink'
+                      : 'border-transparent text-stone-strong hover:text-ink',
+                  ]}
+                >
+                  {t(item.label)}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-5 md:gap-6">
+      <LangSwitcher lang={lang} route={route} class="hidden md:block" />
+      <Button variant="secondary" href={getPath('enquiry', lang)} class="hidden lg:inline-flex">
+        {t('nav.enquiry')}
+      </Button>
+      <MobileNav lang={lang} route={route} />
+    </div>
+  </div>
+</header>
