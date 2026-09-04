@@ -1,0 +1,17 @@
+# build
+dist/
+.astro/
+.vercel/
+
+# dipendenze
+node_modules/
+
+# ambiente
+.env
+.env.production
+.env.*.local
+
+# sistema
+.DS_Store
+*.log
+npm-debug.log*
