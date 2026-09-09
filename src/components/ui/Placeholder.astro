@@ -1,0 +1,28 @@
+---
+interface Props {
+  /** Rapporto d'aspetto definitivo: la foto vera entrerà senza spostare nulla. */
+  ratio: '16/9' | '4/5' | '3/2' | '1/1';
+  /** Cosa deve mostrare l'immagine. Diventerà il testo alternativo. */
+  label: string;
+  class?: string | undefined;
+}
+
+// Segnaposto per le fotografie che non abbiamo ancora (§13).
+// Niente foto di stock: un rettangolo grigio con scritto cosa ci va.
+//
+// La didascalia è in posizione assoluta di proposito: se restasse nel flusso
+// il suo testo farebbe crescere il riquadro e il rapporto d'aspetto non
+// sarebbe più quello dichiarato — un segnaposto che mente sulle proporzioni
+// non serve a niente. Meglio troncarla su schermi stretti.
+// Il colore è `ink` perché su `shade` è l'unico che supera AA.
+const { ratio, label, class: className } = Astro.props;
+---
+
+<div
+  class:list={['relative overflow-hidden bg-shade', className]}
+  style={`aspect-ratio: ${ratio};`}
+>
+  <div class="absolute inset-0 flex items-center justify-center px-5 py-6">
+    <p class="max-w-prose text-center text-small text-ink">{label}</p>
+  </div>
+</div>

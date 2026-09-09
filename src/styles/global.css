@@ -34,6 +34,19 @@
   --color-stone-soft: #9d9a94;
   --color-line-invert: rgba(244, 241, 236, 0.18);
 
+  /* Testo secondario. Non è un colore fisso ma un ruolo: ogni superficie lo
+     ridefinisce sul proprio fondo, così `text-muted` è sempre conforme ad AA
+     senza che il componente debba sapere dove sta.
+       su bone → stone-strong  4.71:1
+       su ink  → stone-soft    6.74:1
+       su sea  → bone         10.63:1  (stone-soft si fermerebbe a 4.27) */
+  --color-muted: var(--color-stone-strong);
+
+  /* Superficie dei segnaposto immagine. Grigio caldo derivato da `bone`,
+     abbastanza scuro da leggersi come "qui manca una foto" senza diventare
+     un elemento di design. Sparisce quando arrivano le fotografie vere. */
+  --color-shade: #e2ded7;
+
   /* ---------- Tipografia (§6) ---------- */
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
@@ -74,6 +87,7 @@
   --spacing-gutter-lg: 2.5rem;
 
   --container-page: 78rem;               /* 1248 px */
+  --container-text: 52rem;               /* titoli e sommari di sezione */
   --container-prose: 40rem;              /* misura di lettura */
 
   /* ---------- Angoli (§5) — massimo 4 px, i bottoni sono squadrati ---------- */
@@ -189,12 +203,20 @@
   }
 }
 
-/* Superficie scura: fondo, testo e anello di focus cambiano insieme,
+/* Superfici scure: fondo, testo e anello di focus cambiano insieme,
    così non serve ricordarsi di invertire il focus caso per caso. */
 @utility surface-dark {
   background-color: var(--color-ink);
   color: var(--color-bone);
   --focus-ring: var(--color-bone);
+  --color-muted: var(--color-stone-soft);
+}
+
+@utility surface-sea {
+  background-color: var(--color-sea);
+  color: var(--color-bone);
+  --focus-ring: var(--color-bone);
+  --color-muted: var(--color-bone);
 }
 
 /* Visibile solo agli screen reader finché non riceve il focus. */

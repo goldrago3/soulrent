@@ -1,0 +1,16 @@
+---
+interface Props {
+  tone?: 'default' | 'invert';
+  class?: string | undefined;
+}
+
+const { tone = 'default', class: className }: Props = Astro.props;
+---
+
+<hr
+  class:list={[
+    'border-0 border-t',
+    tone === 'invert' ? 'border-line-invert' : 'border-line',
+    className,
+  ]}
+/>
