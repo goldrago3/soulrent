@@ -1,0 +1,52 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import Placeholder from '../ui/Placeholder.astro';
+import { getPath, type Lang } from '../../i18n/routes';
+import { useTranslations, type UiKey } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Provvisorio: dalla sessione dedicata agli itinerari queste tre anteprime
+// arriveranno dalla content collection `itineraries` (§8), non da qui.
+const previews = [
+  { title: 'itineraries.one.title', line: 'itineraries.one.line', media: 'itineraries.one.media' },
+  { title: 'itineraries.two.title', line: 'itineraries.two.line', media: 'itineraries.two.media' },
+  { title: 'itineraries.three.title', line: 'itineraries.three.line', media: 'itineraries.three.media' },
+] as const satisfies readonly { title: UiKey; line: UiKey; media: UiKey }[];
+
+const href = getPath('itineraries', lang);
+---
+
+<section data-wa-context="itineraries" class="wrap section-y">
+  <div class="flex flex-wrap items-end justify-between gap-6">
+    <div class="max-w-text">
+      <Eyebrow>{t('itineraries.eyebrow')}</Eyebrow>
+      <h2 class="mt-6 text-h2">{t('itineraries.title')}</h2>
+    </div>
+    <a
+      href={href}
+      class="border-b border-line pb-1 text-small transition-[border-color] duration-400 ease-editorial hover:border-ink"
+    >
+      {t('itineraries.cta')}
+    </a>
+  </div>
+
+  <ul class="mt-16 grid gap-12 md:grid-cols-3 md:gap-8">
+    {
+      previews.map((preview) => (
+        <li>
+          <a href={href} class="block">
+            <Placeholder ratio="3/2" label={t(preview.media)} />
+            <h3 class="mt-6 text-h3">{t(preview.title)}</h3>
+            <p class="mt-3 text-body text-muted">{t(preview.line)}</p>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>

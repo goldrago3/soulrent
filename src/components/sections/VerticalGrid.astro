@@ -1,0 +1,48 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import Placeholder from '../ui/Placeholder.astro';
+import { getPath, type Lang, type RouteKey } from '../../i18n/routes';
+import { useTranslations, type UiKey } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// I tre vertical del §1. Le fotografie sostituiranno i segnaposto: niente
+// icone stock per illustrarli (§12).
+const verticals = [
+  { route: 'fleetBoats', name: 'nav.fleetBoats', line: 'verticals.sea.line', media: 'verticals.sea.media' },
+  { route: 'fleetCars', name: 'nav.fleetCars', line: 'verticals.cars.line', media: 'verticals.cars.media' },
+  {
+    route: 'fleetMotorcycles',
+    name: 'nav.fleetMotorcycles',
+    line: 'verticals.motorcycles.line',
+    media: 'verticals.motorcycles.media',
+  },
+] as const satisfies readonly { route: RouteKey; name: UiKey; line: UiKey; media: UiKey }[];
+---
+
+<section data-wa-context="fleet" class="wrap section-y">
+  <Eyebrow>{t('verticals.eyebrow')}</Eyebrow>
+  <h2 class="mt-6 max-w-text text-h2">{t('verticals.title')}</h2>
+
+  <ul class="mt-16 grid gap-12 md:grid-cols-3 md:gap-8">
+    {
+      verticals.map((vertical) => (
+        <li>
+          <a href={getPath(vertical.route, lang)} class="group block">
+            <Placeholder ratio="4/5" label={t(vertical.media)} />
+            <h3 class="mt-6 text-h3">{t(vertical.name)}</h3>
+            <p class="mt-3 text-body text-muted">{t(vertical.line)}</p>
+            <span class="mt-5 inline-block border-b border-line pb-1 text-small transition-[border-color] duration-400 ease-editorial group-hover:border-ink">
+              {t('verticals.cta')}
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>

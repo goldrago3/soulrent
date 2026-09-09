@@ -1,0 +1,44 @@
+---
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import { getPath, type Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import { whatsappMessageKey, whatsappUrl } from '../../lib/whatsapp';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const whatsapp = whatsappUrl(t(whatsappMessageKey.enquiry));
+---
+
+{/*
+  Nessun form qui: la CTA primaria è sempre la consulenza (§2) e il modulo
+  vero è quello multi-step su /consulenza (§9). Un secondo form corto in home
+  gli farebbe concorrenza. WhatsApp resta come alternativa immediata.
+*/}
+<section data-wa-context="enquiry" class="surface-sea">
+  <div class="wrap section-y">
+    <div class="max-w-text">
+      <Eyebrow>{t('cta.eyebrow')}</Eyebrow>
+      <h2 class="mt-6 text-h2">{t('cta.title')}</h2>
+      <p class="mt-8 max-w-prose text-lead">{t('cta.text')}</p>
+
+      <div class="mt-10 flex flex-wrap gap-4">
+        <Button href={getPath('enquiry', lang)}>{t('nav.enquiry')}</Button>
+        <a
+          href={whatsapp}
+          target="_blank"
+          rel="noopener"
+          aria-label={t('whatsapp.label')}
+          class="inline-flex items-center justify-center rounded-sm border border-bone px-6 py-3 text-small font-medium text-bone transition-[background-color,color] duration-400 ease-editorial hover:bg-bone hover:text-sea"
+        >
+          {t('whatsapp.cta')}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

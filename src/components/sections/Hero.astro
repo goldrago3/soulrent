@@ -1,0 +1,38 @@
+---
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Placeholder from '../ui/Placeholder.astro';
+import { getPath, type Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+{/*
+  Media sopra, testo sotto: senza gradienti (vietati dal §12) un titolo
+  sovrapposto a un video non ha un contrasto garantito. Il video definitivo
+  prenderà il posto del segnaposto, stesso rapporto e stessa altezza massima,
+  quindi il layout non si sposta.
+*/}
+<section data-wa-context="default">
+  {/*
+    Il media si ferma al 55% dello schermo: sopra la piega restano visibili
+    l'occhiello e l'inizio del titolo, che invitano a scorrere. A tutto schermo
+    il visitatore vedrebbe solo un'immagine e non saprebbe che c'è altro.
+  */}
+  <Placeholder ratio="16/9" label={t('hero.media')} class="max-h-[55svh] w-full" />
+
+  <div class="wrap section-y">
+    <div class="max-w-text">
+      <Eyebrow>{t('hero.eyebrow')}</Eyebrow>
+      <h1 class="mt-6 text-h1">{t('hero.title')}</h1>
+      <p class="mt-8 max-w-prose text-lead text-muted">{t('hero.subtitle')}</p>
+      <Button href={getPath('enquiry', lang)} class="mt-10">{t('nav.enquiry')}</Button>
+    </div>
+  </div>
+</section>

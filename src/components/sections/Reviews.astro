@@ -1,0 +1,46 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import type { Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import { reviews } from '../../lib/reviews';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const formatter = new Intl.DateTimeFormat(lang, { year: 'numeric', month: 'long' });
+---
+
+{/*
+  La struttura è pronta, il contenuto no. Finché `reviews` è vuoto resta un
+  segnaposto visibile: il §12 vieta testimonianze inventate e una sezione che
+  sparisce in silenzio non ricorda a nessuno che manca qualcosa.
+*/}
+<section class="wrap section-y">
+  <Eyebrow>{t('reviews.eyebrow')}</Eyebrow>
+  <h2 class="mt-6 max-w-text text-h2">{t('reviews.title')}</h2>
+
+  {
+    reviews.length === 0 ? (
+      <p class="mt-12 max-w-text bg-shade px-6 py-8 text-body text-ink">{t('reviews.empty')}</p>
+    ) : (
+      <ul class="mt-16 grid gap-12 md:grid-cols-3 md:gap-8">
+        {reviews.map((review) => (
+          <li>
+            <figure class="border-t border-line pt-6">
+              <blockquote class="text-lead">
+                <p>{review.testo}</p>
+              </blockquote>
+              <figcaption class="mt-5 text-small text-muted">
+                {review.autore} · <time datetime={review.data}>{formatter.format(new Date(review.data))}</time>
+              </figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</section>
