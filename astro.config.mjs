@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
@@ -19,6 +19,19 @@ export default defineConfig({
     locales: ['it', 'en', 'de'],
     routing: {
       prefixDefaultLocale: false,
+    },
+  },
+  env: {
+    schema: {
+      // Numero WhatsApp in formato E.164. È un dato pubblico — finisce dentro
+      // un link che vede ogni visitatore — quindi ha un default: il sito
+      // funziona appena scaricato. Per cambiarlo basta la variabile d'ambiente,
+      // in locale con un file .env, su Vercel dalle impostazioni del progetto.
+      PUBLIC_WHATSAPP_NUMBER: envField.string({
+        context: 'client',
+        access: 'public',
+        default: '+393345730718',
+      }),
     },
   },
   vite: {
