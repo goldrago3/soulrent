@@ -10,6 +10,11 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'type'> {
 
 const { variant = 'primary', href, type = 'button', class: className, ...rest } = Astro.props;
 
+// Attenzione: `base` fissa il display a `inline-flex`. Una utility di display
+// passata da fuori con `class` (`hidden`, `block`, `flex`…) non ha la meglio,
+// perché fra due utility di pari specificità vince l'ordine nel foglio di
+// stile. Per nascondere o cambiare il flusso di un bottone si usa un
+// contenitore attorno.
 const base =
   'inline-flex items-center justify-center rounded-sm border px-6 py-3 text-small font-medium ' +
   // L'outline resta fuori dalla transizione: il focus deve comparire subito.

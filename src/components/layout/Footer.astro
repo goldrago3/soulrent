@@ -27,20 +27,20 @@ const columns = [
     <div class="flex flex-col gap-4">
       {/* [TODO] logo definitivo: per ora segnaposto testuale */}
       <span class="font-display text-h3 leading-none">SouLRent</span>
-      <p class="text-small text-stone-soft">{t('footer.positioning')}</p>
+      <p class="text-small text-muted">{t('footer.positioning')}</p>
     </div>
 
     {
       columns.map((column) => (
         <nav aria-label={column.heading} class="flex flex-col gap-4">
-          <Eyebrow as="p" tone="invert">{column.heading}</Eyebrow>
+          <Eyebrow as="p">{column.heading}</Eyebrow>
           <ul class="flex flex-col gap-3">
             {column.items.map((item) => (
               <li>
                 <a
                   href={getPath(item.route, lang)}
                   aria-current={route === item.route ? 'page' : undefined}
-                  class="text-small text-stone-soft transition-[color] duration-400 ease-editorial hover:text-bone"
+                  class="text-small text-muted transition-[color] duration-400 ease-editorial hover:text-bone"
                 >
                   {t(item.label)}
                 </a>
@@ -52,8 +52,8 @@ const columns = [
     }
 
     <div class="flex flex-col gap-4">
-      <Eyebrow as="p" tone="invert">{t('footer.contact')}</Eyebrow>
-      <ul class="flex flex-col gap-3 text-small text-stone-soft">
+      <Eyebrow as="p">{t('footer.contact')}</Eyebrow>
+      <ul class="flex flex-col gap-3 text-small text-muted">
         <li>{business.email}</li>
         <li>{business.telephone}</li>
         <li>
@@ -65,7 +65,7 @@ const columns = [
   </div>
 
   <div class="wrap border-t border-line-invert py-8">
-    <div class="flex flex-col gap-2 text-small text-stone-soft md:flex-row md:items-center md:justify-between">
+    <div class="flex flex-col gap-2 text-small text-muted md:flex-row md:items-center md:justify-between">
       <p>© {year} {business.name} — {t('footer.rights')}</p>
       <p>{t('footer.vat')} {business.vatId}</p>
     </div>

@@ -31,6 +31,16 @@ Da Astro 7 `astro dev` gira in background: `npx astro dev status`,
   chiave manca in inglese o tedesco, il progetto non compila.
 - `src/lib/site.ts` — dati aziendali. Tutti i `[TODO]` da riempire stanno qui.
 
+## Variabili d'ambiente
+
+Copia `.env.example` in `.env` per sovrascrivere i valori in locale; su Vercel
+gli stessi nomi si impostano dalle impostazioni del progetto. Lo schema è
+tipizzato in `astro.config.mjs`: un nome sbagliato non compila.
+
+| Nome | Cosa | Default |
+|---|---|---|
+| `PUBLIC_WHATSAPP_NUMBER` | numero WhatsApp in formato E.164 | `+393345730718` |
+
 ## Prima di andare online
 
 Il dominio non è ancora stato acquistato. In `astro.config.mjs` il campo `site`
@@ -41,6 +51,13 @@ canonical, `hreflang` e Open Graph si aggiornano da soli su tutte le pagine.
 
 ## Stato
 
-Impalcatura: design system, layout e navigazione in tre lingue.
-Le tre index sono vuote per costruzione. I contenuti sono segnaposto `[TODO]`
-espliciti: non vanno riempiti con testo inventato (`CLAUDE.md` §13).
+Impalcatura e home italiana. Inglese e tedesco hanno già tutte le chiavi in
+`ui.ts` ma i contenuti restano da tradurre: aspettano la sessione dedicata.
+
+Le altre pagine del §7 esistono come scheletri, generati da
+`src/pages/[...slug].astro` a partire da `src/lib/stubRoutes.ts`: servono a non
+lasciare voci di menu che portano a un 404. Quando una pagina vera viene
+costruita, va tolta la sua chiave da quell'elenco.
+
+Testi e fotografie sono segnaposto `[TODO]` espliciti, con indicazione di tono
+e lunghezza attesa. Non vanno riempiti con contenuto inventato (`CLAUDE.md` §13).

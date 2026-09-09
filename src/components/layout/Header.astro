@@ -51,9 +51,15 @@ const t = useTranslations(lang);
 
     <div class="flex items-center gap-5 md:gap-6">
       <LangSwitcher lang={lang} route={route} class="hidden md:block" />
-      <Button variant="secondary" href={getPath('enquiry', lang)} class="hidden lg:inline-flex">
-        {t('nav.enquiry')}
-      </Button>
+      {/*
+        La visibilità sta sul contenitore, non sul bottone: `Button` porta già
+        `inline-flex` fra le sue classi di base e una `hidden` passata da fuori
+        non vincerebbe — sono due utility di display e a decidere è l'ordine
+        nel foglio di stile, non quello nell'attributo class.
+      */}
+      <div class="hidden lg:block">
+        <Button variant="secondary" href={getPath('enquiry', lang)}>{t('nav.enquiry')}</Button>
+      </div>
       <MobileNav lang={lang} route={route} />
     </div>
   </div>
