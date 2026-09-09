@@ -1,14 +1,27 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import CtaBlock from '../components/sections/CtaBlock.astro';
+import Hero from '../components/sections/Hero.astro';
+import ItinerariesPreview from '../components/sections/ItinerariesPreview.astro';
+import Reviews from '../components/sections/Reviews.astro';
+import ServicePoints from '../components/sections/ServicePoints.astro';
+import VerticalGrid from '../components/sections/VerticalGrid.astro';
 import { useTranslations } from '../i18n/ui';
 
 const lang = 'it' as const;
 const t = useTranslations(lang);
 ---
 
+{/*
+  Home italiana. Inglese e tedesco hanno già le chiavi in ui.ts ma restano
+  alla sessione dedicata alle lingue: i componenti prendono `lang` come
+  parametro, quindi lì basterà montarli.
+*/}
 <BaseLayout lang={lang} route="home" title={t('home.title')} description={t('site.description')}>
-  {/* Impalcatura: la home vera arriva nella sessione dedicata alle sezioni. */}
-  <section class="wrap section-y">
-    <h1 class="text-h1 max-w-prose">{t('home.h1')}</h1>
-  </section>
+  <Hero lang={lang} />
+  <VerticalGrid lang={lang} />
+  <ServicePoints lang={lang} />
+  <Reviews lang={lang} />
+  <ItinerariesPreview lang={lang} />
+  <CtaBlock lang={lang} />
 </BaseLayout>

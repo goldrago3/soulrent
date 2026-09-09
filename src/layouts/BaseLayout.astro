@@ -13,6 +13,7 @@ import inter500 from '@fontsource/inter/files/inter-latin-500-normal.woff2?url';
 
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
+import WhatsAppButton from '../components/layout/WhatsAppButton.astro';
 import {
   defaultLang,
   getAlternates,
@@ -24,6 +25,7 @@ import {
 } from '../i18n/routes';
 import { useTranslations } from '../i18n/ui';
 import { business } from '../lib/site';
+import type { WhatsAppContext } from '../lib/whatsapp';
 
 interface Props {
   lang: Lang;
@@ -33,9 +35,11 @@ interface Props {
   /** Percorso dell'immagine Open Graph. Finché non esiste resta il segnaposto di site.ts. */
   ogImage?: string;
   ogImageAlt?: string;
+  /** Messaggio di partenza del bottone WhatsApp. Nella home lo scavalca la sezione visibile. */
+  whatsapp?: WhatsAppContext;
 }
 
-const { lang, route, title, description, ogImage, ogImageAlt } = Astro.props;
+const { lang, route, title, description, ogImage, ogImageAlt, whatsapp = 'default' } = Astro.props;
 const t = useTranslations(lang);
 
 // Astro.site è definito in astro.config.mjs; il fallback serve solo in dev.
@@ -144,6 +148,10 @@ const preloadedFonts = [instrumentSerif400, inter400, inter500];
     <meta name="twitter:image" content={socialImage} />
     <meta name="twitter:image:alt" content={socialImageAlt} />
 
+    {/*
+      Unico colore scritto fuori da global.css in tutto il progetto: un meta
+      tag non può leggere una variabile CSS. Deve restare uguale a `--color-ink`.
+    */}
     <meta name="theme-color" content="#0f1113" />
 
     <script is:inline type="application/ld+json" set:html={localBusinessJson} />
@@ -156,5 +164,6 @@ const preloadedFonts = [instrumentSerif400, inter400, inter500];
       <slot />
     </main>
     <Footer lang={lang} route={route} />
+    <WhatsAppButton lang={lang} context={whatsapp} />
   </body>
 </html>

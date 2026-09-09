@@ -1,0 +1,37 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import { languages, normalizePath, routes, type Lang } from '../i18n/routes';
+import { useTranslations } from '../i18n/ui';
+import { stubRoutes, type StubRoute } from '../lib/stubRoutes';
+
+/** Pagine-scheletro per le rotte non ancora costruite. Elenco in src/lib/stubRoutes.ts. */
+export const getStaticPaths = (() =>
+  (Object.keys(stubRoutes) as StubRoute[]).flatMap((route) =>
+    languages.map((lang) => ({
+      // `normalizePath` toglie lo slash finale, `slice(1)` quello iniziale:
+      // `[...slug]` vuole il percorso senza estremi.
+      params: { slug: normalizePath(routes[route][lang]).slice(1) },
+      props: { route, lang },
+    })),
+  )) satisfies GetStaticPaths;
+
+interface Props {
+  route: StubRoute;
+  lang: Lang;
+}
+
+const { route, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const title = t(stubRoutes[route]);
+---
+
+<BaseLayout lang={lang} route={route} title={title} description={t('stub.description')}>
+  <section class="wrap section-y">
+    <Eyebrow>{t('stub.eyebrow')}</Eyebrow>
+    <h1 class="mt-6 max-w-text text-h1">{title}</h1>
+    <p class="mt-8 max-w-prose bg-shade px-6 py-8 text-body text-ink">{t('stub.text')}</p>
+  </section>
+</BaseLayout>
