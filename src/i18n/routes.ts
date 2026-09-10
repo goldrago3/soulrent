@@ -45,6 +45,13 @@ export const routes = {
   about: { it: '/chi-siamo', en: '/en/about', de: '/de/ueber-uns' },
   partners: { it: '/partner', en: '/en/partners', de: '/de/partner' },
   contact: { it: '/contatti', en: '/en/contact', de: '/de/kontakt' },
+
+  // Pagine legali. Non sono nella tabella del §7 perché lì si elencano le
+  // pagine di contenuto, ma servono lo stesso: il footer le linka e la spunta
+  // obbligatoria del form di consulenza deve puntare all'informativa.
+  privacy: { it: '/privacy', en: '/en/privacy', de: '/de/datenschutz' },
+  cookies: { it: '/cookie', en: '/en/cookies', de: '/de/cookies' },
+  terms: { it: '/condizioni', en: '/en/rental-terms', de: '/de/mietbedingungen' },
 } as const satisfies Record<string, Record<Lang, string>>;
 
 export type RouteKey = keyof typeof routes;
