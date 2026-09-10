@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { getAlternates, getPath, languages, type RouteKey } from '../i18n/routes';
 import { categoriaRoute, getFleet } from '../lib/fleet';
 import { getItineraries } from '../lib/itineraries';
-import { stubRoutes } from '../lib/stubRoutes';
+import { scheletri } from '../lib/contentRoutes';
 
 /**
  * Sitemap generata dalla mappa degli slug e dalle collection.
@@ -24,11 +24,25 @@ async function raccogliVoci(): Promise<Voce[]> {
   const veicoli = await getFleet();
   const itinerari = await getItineraries();
 
-  // Le pagine-scheletro restano fuori: non hanno ancora contenuto da indicizzare.
-  const daEscludere = new Set(Object.keys(stubRoutes));
+  // Le pagine ancora scheletro restano fuori: non hanno contenuto da indicizzare.
+  const daEscludere = new Set<string>(Object.keys(scheletri));
 
   const fisse: RouteKey[] = (
-    ['home', 'fleet', 'fleetCars', 'fleetMotorcycles', 'fleetBoats', 'itineraries'] as const
+    [
+      'home',
+      'fleet',
+      'fleetCars',
+      'fleetMotorcycles',
+      'fleetBoats',
+      'itineraries',
+      'howItWorks',
+      'about',
+      'partners',
+      'contact',
+      'privacy',
+      'cookies',
+      'terms',
+    ] as const
   ).filter((chiave) => !daEscludere.has(chiave));
 
   return [

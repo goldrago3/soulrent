@@ -1,37 +1,31 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Eyebrow from '../components/ui/Eyebrow.astro';
+import ContentRoute from '../components/content/ContentRoute.astro';
 import { languages, normalizePath, routes, type Lang } from '../i18n/routes';
-import { useTranslations } from '../i18n/ui';
-import { stubRoutes, type StubRoute } from '../lib/stubRoutes';
+import { titoli, type PaginaSingola } from '../lib/contentRoutes';
 
-/** Pagine-scheletro per le rotte non ancora costruite. Elenco in src/lib/stubRoutes.ts. */
+/**
+ * Tutte le pagine singole del sito, nelle tre lingue: quelle costruite e
+ * quelle ancora scheletro. L'elenco vive in src/lib/contentRoutes.ts.
+ *
+ * Home, flotta e itinerari hanno rotte proprie e non passano di qui.
+ */
 export const getStaticPaths = (() =>
-  (Object.keys(stubRoutes) as StubRoute[]).flatMap((route) =>
+  (Object.keys(titoli) as PaginaSingola[]).flatMap((pagina) =>
     languages.map((lang) => ({
       // `normalizePath` toglie lo slash finale, `slice(1)` quello iniziale:
       // `[...slug]` vuole il percorso senza estremi.
-      params: { slug: normalizePath(routes[route][lang]).slice(1) },
-      props: { route, lang },
+      params: { slug: normalizePath(routes[pagina][lang]).slice(1) },
+      props: { pagina, lang },
     })),
   )) satisfies GetStaticPaths;
 
 interface Props {
-  route: StubRoute;
+  pagina: PaginaSingola;
   lang: Lang;
 }
 
-const { route, lang } = Astro.props;
-const t = useTranslations(lang);
-
-const title = t(stubRoutes[route]);
+const { pagina, lang } = Astro.props;
 ---
 
-<BaseLayout lang={lang} route={route} title={title} description={t('stub.description')}>
-  <section class="wrap section-y">
-    <Eyebrow>{t('stub.eyebrow')}</Eyebrow>
-    <h1 class="mt-6 max-w-text text-h1">{title}</h1>
-    <p class="surface-shade mt-8 max-w-prose px-6 py-8 text-body">{t('stub.text')}</p>
-  </section>
-</BaseLayout>
+<ContentRoute pagina={pagina} lang={lang} />

@@ -3,7 +3,7 @@ import Eyebrow from '../ui/Eyebrow.astro';
 import LangSwitcher from './LangSwitcher.astro';
 import Logo from './Logo.astro';
 import { getPath, type Lang, type RouteKey } from '../../i18n/routes';
-import { useTranslations } from '../../i18n/ui';
+import { useTranslations, type UiKey } from '../../i18n/ui';
 import { footerCompany, footerExplore } from '../../lib/navigation';
 import { business } from '../../lib/site';
 
@@ -21,6 +21,13 @@ const columns = [
   { heading: t('footer.explore'), items: footerExplore },
   { heading: t('footer.company'), items: footerCompany },
 ] as const;
+
+// Ora che le pagine esistono, i link legali si possono mostrare.
+const legali = [
+  { route: 'privacy', label: 'footer.privacy' },
+  { route: 'cookies', label: 'footer.cookies' },
+  { route: 'terms', label: 'footer.terms' },
+] as const satisfies readonly { route: RouteKey; label: UiKey }[];
 ---
 
 <footer class="surface-dark">
@@ -69,10 +76,22 @@ const columns = [
       <p>© {year} {business.name} — {t('footer.rights')}</p>
       <p>{t('footer.vat')} {business.vatId}</p>
     </div>
-    {/*
-      [TODO] link legali (privacy, cookie, condizioni di noleggio):
-      vanno aggiunti a src/i18n/routes.ts quando i testi esistono.
-      Non li linkiamo finché la pagina non c'è.
-    */}
+    <nav aria-label={t('footer.legal')} class="mt-6">
+      <ul class="flex flex-wrap gap-x-8 gap-y-2 text-small text-muted">
+        {
+          legali.map((voce) => (
+            <li>
+              <a
+                href={getPath(voce.route, lang)}
+                aria-current={route === voce.route ? 'page' : undefined}
+                class="transition-[color] duration-400 ease-editorial hover:text-bone"
+              >
+                {t(voce.label)}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
   </div>
 </footer>
