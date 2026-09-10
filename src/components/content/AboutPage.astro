@@ -1,0 +1,58 @@
+---
+import ContentPage from './ContentPage.astro';
+import Button from '../ui/Button.astro';
+import Placeholder from '../ui/Placeholder.astro';
+import { getPath, type Lang } from '../../i18n/routes';
+import { useTranslations, type UiKey } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// §4.5: su un noleggio di fascia alta il cliente sta valutando te, non l'auto.
+// Testi in prima persona, ritratto ambientato, mai foto di gente in giacca.
+const blocchi = [
+  { titolo: 'about.why.title', testo: 'about.why.text' },
+  { titolo: 'about.few.title', testo: 'about.few.text' },
+  { titolo: 'about.skipper.title', testo: 'about.skipper.text' },
+  { titolo: 'about.experience.title', testo: 'about.experience.text' },
+] as const satisfies readonly { titolo: UiKey; testo: UiKey }[];
+---
+
+<ContentPage
+  lang={lang}
+  route="about"
+  occhiello={t('about.eyebrow')}
+  titolo={t('nav.about')}
+  descrizione={t('about.lead')}
+  apertura={t('about.lead')}
+>
+  <div class="wrap section-y grid gap-12 lg:grid-cols-[2fr_3fr] lg:gap-16">
+    <Placeholder ratio="4/5" label={t('about.portrait')} class="lg:sticky lg:top-28" />
+
+    <div>
+      {
+        blocchi.map((blocco) => (
+          <section class="border-t border-line py-10 first:border-t-0 first:pt-0">
+            <h2 class="text-h2">{t(blocco.titolo)}</h2>
+            <p class="mt-6 max-w-prose text-body text-muted">{t(blocco.testo)}</p>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="wrap pb-section md:pb-section-lg">
+    <Placeholder ratio="3/2" label={t('about.handover')} />
+  </div>
+
+  <section class="surface-sea">
+    <div class="wrap section-y">
+      <p class="max-w-text text-lead">{t('cta.text')}</p>
+      <Button href={getPath('enquiry', lang)} class="mt-8">{t('nav.enquiry')}</Button>
+    </div>
+  </section>
+</ContentPage>

@@ -1,0 +1,35 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import type { Lang } from '../../i18n/routes';
+import { useTranslations, type UiKey } from '../../i18n/ui';
+
+interface Passo {
+  titolo: UiKey;
+  testo: UiKey;
+}
+
+interface Props {
+  lang: Lang;
+  titolo: string;
+  passi: readonly Passo[];
+}
+
+const { lang, titolo, passi } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="wrap section-y">
+  <Eyebrow as="h2">{titolo}</Eyebrow>
+
+  <ol class="mt-12 grid gap-10 md:grid-cols-2 md:gap-x-8 lg:grid-cols-4">
+    {
+      passi.map((passo, indice) => (
+        <li class="border-t border-line pt-6">
+          <Eyebrow as="span">{String(indice + 1).padStart(2, '0')}</Eyebrow>
+          <h3 class="mt-5 text-h3">{t(passo.titolo)}</h3>
+          <p class="mt-3 text-body text-muted">{t(passo.testo)}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>

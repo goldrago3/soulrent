@@ -1,0 +1,93 @@
+---
+import ContentPage from './ContentPage.astro';
+import type { Lang } from '../../i18n/routes';
+import { useTranslations, type UiKey } from '../../i18n/ui';
+import type { DocumentoLegale } from '../../lib/contentRoutes';
+
+interface Props {
+  lang: Lang;
+  documento: DocumentoLegale;
+}
+
+const { lang, documento } = Astro.props;
+const t = useTranslations(lang);
+
+/**
+ * Struttura pronta, contenuto no.
+ *
+ * Le intestazioni sono quelle standard di questi documenti — non sono testo
+ * inventato. Il corpo lo deve scrivere chi si occupa della parte legale: un
+ * testo legale plausibile ma sbagliato è peggio di una pagina vuota, perché
+ * nessuno lo rilegge (§13).
+ */
+const documenti = {
+  privacy: {
+    titolo: 'footer.privacy' as UiKey,
+    apertura: 'legal.privacy.lead' as UiKey,
+    sezioni: [
+      'legal.privacy.s1',
+      'legal.privacy.s2',
+      'legal.privacy.s3',
+      'legal.privacy.s4',
+      'legal.privacy.s5',
+      'legal.privacy.s6',
+      'legal.privacy.s7',
+      'legal.privacy.s8',
+    ] as UiKey[],
+  },
+  cookies: {
+    titolo: 'footer.cookies' as UiKey,
+    apertura: 'legal.cookies.lead' as UiKey,
+    sezioni: [
+      'legal.cookies.s1',
+      'legal.cookies.s2',
+      'legal.cookies.s3',
+      'legal.cookies.s4',
+    ] as UiKey[],
+  },
+  terms: {
+    titolo: 'footer.terms' as UiKey,
+    apertura: 'legal.terms.lead' as UiKey,
+    sezioni: [
+      'legal.terms.s1',
+      'legal.terms.s2',
+      'legal.terms.s3',
+      'legal.terms.s4',
+      'legal.terms.s5',
+      'legal.terms.s6',
+      'legal.terms.s7',
+      'legal.terms.s8',
+    ] as UiKey[],
+  },
+} as const satisfies Record<DocumentoLegale, { titolo: UiKey; apertura: UiKey; sezioni: UiKey[] }>;
+
+const scelto = documenti[documento];
+---
+
+<ContentPage
+  lang={lang}
+  route={documento}
+  occhiello={t('footer.legal')}
+  titolo={t(scelto.titolo)}
+  descrizione={t(scelto.apertura)}
+>
+  <div class="wrap section-y">
+    <p class="surface-shade max-w-text px-6 py-6 text-body">{t('legal.pending')}</p>
+
+    <div class="mt-14 max-w-text">
+      {
+        scelto.sezioni.map((sezione, indice) => (
+          <section class="border-t border-line py-8">
+            <h2 class="text-h3">
+              <span class="text-eyebrow uppercase text-muted">
+                {String(indice + 1).padStart(2, '0')}
+              </span>{' '}
+              {t(sezione)}
+            </h2>
+            <p class="mt-4 max-w-prose text-body text-muted">{t(scelto.apertura)}</p>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</ContentPage>

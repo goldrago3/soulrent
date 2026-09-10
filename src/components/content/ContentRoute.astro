@@ -1,0 +1,46 @@
+---
+import AboutPage from './AboutPage.astro';
+import ContactPage from './ContactPage.astro';
+import ContentPage from './ContentPage.astro';
+import HowItWorksPage from './HowItWorksPage.astro';
+import LegalPage from './LegalPage.astro';
+import PartnersPage from './PartnersPage.astro';
+import type { Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import { isDocumentoLegale, titoli, type PaginaSingola } from '../../lib/contentRoutes';
+
+interface Props {
+  pagina: PaginaSingola;
+  lang: Lang;
+}
+
+const { pagina, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+{
+  pagina === 'howItWorks' ? (
+    <HowItWorksPage lang={lang} />
+  ) : pagina === 'about' ? (
+    <AboutPage lang={lang} />
+  ) : pagina === 'partners' ? (
+    <PartnersPage lang={lang} />
+  ) : pagina === 'contact' ? (
+    <ContactPage lang={lang} />
+  ) : isDocumentoLegale(pagina) ? (
+    <LegalPage lang={lang} documento={pagina} />
+  ) : (
+    /* Ancora scheletro: il form e il meteo hanno una sessione loro. */
+    <ContentPage
+      lang={lang}
+      route={pagina}
+      occhiello={t('stub.eyebrow')}
+      titolo={t(titoli[pagina])}
+      descrizione={t('stub.description')}
+    >
+      <div class="wrap section-y">
+        <p class="surface-shade max-w-prose px-6 py-8 text-body">{t('stub.text')}</p>
+      </div>
+    </ContentPage>
+  )
+}

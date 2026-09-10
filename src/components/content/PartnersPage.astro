@@ -1,0 +1,59 @@
+---
+import ContentPage from './ContentPage.astro';
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import { getPath, type Lang } from '../../i18n/routes';
+import { useTranslations, type UiKey } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// §4.8: la pagina che si manda a hotel, concierge, agenzie ville e broker.
+const punti = [
+  { titolo: 'partners.how.title', testo: 'partners.how.text' },
+  { titolo: 'partners.fee.title', testo: 'partners.fee.text' },
+  { titolo: 'partners.response.title', testo: 'partners.response.text' },
+  { titolo: 'partners.delivery.title', testo: 'partners.delivery.text' },
+  { titolo: 'partners.contact.title', testo: 'partners.contact.text' },
+] as const satisfies readonly { titolo: UiKey; testo: UiKey }[];
+---
+
+<ContentPage
+  lang={lang}
+  route="partners"
+  occhiello={t('partners.eyebrow')}
+  titolo={t('nav.partners')}
+  descrizione={t('partners.lead')}
+  apertura={t('partners.lead')}
+>
+  <div class="wrap section-y">
+    <ol class="grid gap-10 md:grid-cols-2 md:gap-x-8">
+      {
+        punti.map((punto, indice) => (
+          <li class="border-t border-line pt-6">
+            <Eyebrow as="span">{String(indice + 1).padStart(2, '0')}</Eyebrow>
+            <h2 class="mt-5 text-h3">{t(punto.titolo)}</h2>
+            <p class="mt-3 max-w-prose text-body text-muted">{t(punto.testo)}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+
+  <section class="surface-dark">
+    <div class="wrap section-y">
+      <p class="max-w-text text-lead">{t('partners.lead')}</p>
+      {/*
+        Il form dedicato del §4.8 è lo stesso di consulenza: arriva con
+        l'origine già indicata, così le richieste B2B si riconoscono.
+      */}
+      <Button href={`${getPath('enquiry', lang)}?origine=partner`} class="mt-8">
+        {t('partners.cta')}
+      </Button>
+    </div>
+  </section>
+</ContentPage>

@@ -1,0 +1,77 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import type { Lang } from '../../i18n/routes';
+import { useTranslations, type UiKey } from '../../i18n/ui';
+
+interface Voce {
+  domanda: UiKey;
+  risposta: UiKey;
+}
+
+interface Props {
+  lang: Lang;
+  titolo: string;
+  intro?: string;
+  voci: readonly Voce[];
+}
+
+const { lang, titolo, intro, voci } = Astro.props;
+const t = useTranslations(lang);
+
+const risposte = voci.map((voce) => ({
+  domanda: t(voce.domanda),
+  risposta: t(voce.risposta),
+}));
+
+/**
+ * I dati strutturati FAQPage escono solo quando le risposte sono vere.
+ * Dichiarare a Google che una pagina risponde a una domanda, e poi darle un
+ * segnaposto, è peggio che non dichiarare niente: la penalizzazione la prende
+ * il sito, non il segnaposto.
+ */
+const pronte = risposte.every((voce) => !voce.risposta.includes('[TODO'));
+
+const datiStrutturati = pronte
+  ? JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: risposte.map((voce) => ({
+        '@type': 'Question',
+        name: voce.domanda,
+        acceptedAnswer: { '@type': 'Answer', text: voce.risposta },
+      })),
+    }).replace(/</g, '\\u003c')
+  : undefined;
+---
+
+<section class="wrap section-y">
+  <Eyebrow as="h2">{titolo}</Eyebrow>
+  {intro && <p class="mt-6 max-w-prose text-lead text-muted">{intro}</p>}
+
+  {/*
+    Niente `dl`: un `details` non è un figlio ammesso di una lista di
+    definizioni, e un markup non valido rompe l'albero di accessibilità.
+    `details` nativo si apre da tastiera senza JavaScript, e il testo resta
+    nel documento anche da chiuso — quindi i motori di ricerca lo leggono.
+  */}
+  <div class="mt-12 max-w-text">
+    {
+      risposte.map((voce) => (
+        <details class="group border-t border-line">
+          <summary class="flex cursor-pointer items-baseline justify-between gap-6 py-6 [&::-webkit-details-marker]:hidden">
+            <h3 class="text-h3">{voce.domanda}</h3>
+            <span
+              aria-hidden="true"
+              class="shrink-0 text-body text-muted transition-transform duration-400 ease-editorial group-open:rotate-45"
+            >
+              +
+            </span>
+          </summary>
+          <p class="max-w-prose pb-8 text-body text-muted">{voce.risposta}</p>
+        </details>
+      ))
+    }
+  </div>
+
+  {datiStrutturati && <script is:inline type="application/ld+json" set:html={datiStrutturati} />}
+</section>

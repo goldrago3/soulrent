@@ -1,0 +1,81 @@
+---
+import ContentPage from './ContentPage.astro';
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import { getPath, type Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import { business } from '../../lib/site';
+import { whatsappMessageKey, whatsappUrl } from '../../lib/whatsapp';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// I valori vengono da src/lib/site.ts: finché sono [TODO] si vedono.
+const voci = [
+  { etichetta: t('contact.phone'), valore: business.telephone, href: `tel:${business.telephone}` },
+  { etichetta: t('contact.email'), valore: business.email, href: `mailto:${business.email}` },
+  {
+    etichetta: t('contact.base'),
+    valore: `${business.address.locality}, ${business.address.region}`,
+  },
+  { etichetta: t('contact.hours'), valore: t('contact.hoursValue') },
+];
+
+// Un recapito ancora da compilare non deve diventare un link che non porta da nessuna parte.
+const daCompilare = (valore: string): boolean => valore.includes('[TODO');
+---
+
+<ContentPage
+  lang={lang}
+  route="contact"
+  occhiello={t('contact.eyebrow')}
+  titolo={t('nav.contact')}
+  descrizione={t('contact.lead')}
+  apertura={t('contact.lead')}
+>
+  <div class="wrap section-y grid gap-12 lg:grid-cols-2 lg:gap-16">
+    <dl>
+      {
+        voci.map((voce) => (
+          <div class="flex flex-wrap items-baseline justify-between gap-4 border-t border-line py-5">
+            <dt class="text-small text-muted">{voce.etichetta}</dt>
+            <dd class="text-body">
+              {voce.href && !daCompilare(voce.valore) ? (
+                <a
+                  href={voce.href}
+                  class="border-b border-line pb-1 transition-[border-color] duration-400 ease-editorial hover:border-ink"
+                >
+                  {voce.valore}
+                </a>
+              ) : (
+                voce.valore
+              )}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <div>
+      <Eyebrow as="h2">{t('whatsapp.cta')}</Eyebrow>
+      <p class="mt-6 max-w-prose text-body text-muted">{t('contact.preferred')}</p>
+
+      <div class="mt-8 flex flex-wrap gap-4">
+        <Button href={getPath('enquiry', lang)}>{t('nav.enquiry')}</Button>
+        <Button
+          variant="secondary"
+          href={whatsappUrl(t(whatsappMessageKey.default))}
+          target="_blank"
+          rel="noopener"
+          aria-label={t('whatsapp.label')}
+        >
+          {t('whatsapp.cta')}
+        </Button>
+      </div>
+    </div>
+  </div>
+</ContentPage>

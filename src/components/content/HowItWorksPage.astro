@@ -1,0 +1,55 @@
+---
+import ContentPage from './ContentPage.astro';
+import Faq from './Faq.astro';
+import Steps from './Steps.astro';
+import Button from '../ui/Button.astro';
+import { getPath, type Lang } from '../../i18n/routes';
+import { useTranslations, type UiKey } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const passi = [
+  { titolo: 'howItWorks.step1.title', testo: 'howItWorks.step1.text' },
+  { titolo: 'howItWorks.step2.title', testo: 'howItWorks.step2.text' },
+  { titolo: 'howItWorks.step3.title', testo: 'howItWorks.step3.text' },
+  { titolo: 'howItWorks.step4.title', testo: 'howItWorks.step4.text' },
+] as const satisfies readonly { titolo: UiKey; testo: UiKey }[];
+
+// I nove punti del §4.7: trasparenza operativa radicale. Rispondere qui taglia
+// le domande in chat e sono le risposte che i motori di ricerca citano.
+const domande = [
+  { domanda: 'faq.documenti.q', risposta: 'faq.documenti.a' },
+  { domanda: 'faq.consegna.q', risposta: 'faq.consegna.a' },
+  { domanda: 'faq.cauzione.q', risposta: 'faq.cauzione.a' },
+  { domanda: 'faq.assicurazione.q', risposta: 'faq.assicurazione.a' },
+  { domanda: 'faq.carburante.q', risposta: 'faq.carburante.a' },
+  { domanda: 'faq.chilometraggio.q', risposta: 'faq.chilometraggio.a' },
+  { domanda: 'faq.cancellazione.q', risposta: 'faq.cancellazione.a' },
+  { domanda: 'faq.danni.q', risposta: 'faq.danni.a' },
+  { domanda: 'faq.maltempo.q', risposta: 'faq.maltempo.a' },
+] as const satisfies readonly { domanda: UiKey; risposta: UiKey }[];
+---
+
+<ContentPage
+  lang={lang}
+  route="howItWorks"
+  occhiello={t('howItWorks.eyebrow')}
+  titolo={t('nav.howItWorks')}
+  descrizione={t('howItWorks.intro')}
+  apertura={t('howItWorks.intro')}
+>
+  <Steps lang={lang} titolo={t('howItWorks.steps')} passi={passi} />
+  <Faq lang={lang} titolo={t('howItWorks.faq')} intro={t('howItWorks.faqIntro')} voci={domande} />
+
+  <section class="surface-sea">
+    <div class="wrap section-y">
+      <p class="max-w-text text-lead">{t('cta.text')}</p>
+      <Button href={getPath('enquiry', lang)} class="mt-8">{t('nav.enquiry')}</Button>
+    </div>
+  </section>
+</ContentPage>

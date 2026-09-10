@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import type { Lang, RouteKey } from '../../i18n/routes';
+import type { WhatsAppContext } from '../../lib/whatsapp';
+
+interface Props {
+  lang: Lang;
+  route: RouteKey;
+  occhiello: string;
+  titolo: string;
+  descrizione: string;
+  /** Riga di apertura sotto il titolo. */
+  apertura?: string;
+  whatsapp?: WhatsAppContext;
+}
+
+// Intestazione condivisa da tutte le pagine di contenuto: stesso ritmo,
+// stessa larghezza di lettura, un h1 solo.
+const { lang, route, occhiello, titolo, descrizione, apertura, whatsapp = 'default' } = Astro.props;
+---
+
+<BaseLayout
+  lang={lang}
+  route={route}
+  title={titolo}
+  description={descrizione}
+  whatsapp={whatsapp}
+>
+  <header class="wrap pt-section md:pt-section-lg">
+    <div class="max-w-text">
+      <Eyebrow>{occhiello}</Eyebrow>
+      <h1 class="mt-6 text-h1">{titolo}</h1>
+      {apertura && <p class="mt-8 max-w-prose text-lead text-muted">{apertura}</p>}
+    </div>
+  </header>
+
+  <slot />
+</BaseLayout>
