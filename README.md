@@ -15,6 +15,7 @@ Il contesto di progetto e le regole vincolanti stanno in `CLAUDE.md`.
 | `npm run dev` | avvia il server di sviluppo su `http://localhost:4321` |
 | `npm run build` | esegue `astro check` e poi il build in `dist/` |
 | `npm run check` | solo il controllo dei tipi |
+| `npm test` | i test (schema della flotta e vincolo sul prezzo) |
 | `npm run preview` | serve il build di produzione in locale |
 
 Da Astro 7 `astro dev` gira in background: `npx astro dev status`,
@@ -30,6 +31,15 @@ Da Astro 7 `astro dev` gira in background: `npx astro dev status`,
 - `src/i18n/ui.ts` — stringhe di interfaccia. L'italiano è la fonte: se una
   chiave manca in inglese o tedesco, il progetto non compila.
 - `src/lib/site.ts` — dati aziendali. Tutti i `[TODO]` da riempire stanno qui.
+- `src/content/fleet/` — un file markdown per veicolo. Aggiungerne uno non
+  richiede di toccare il codice: vedi `docs/aggiungere-un-veicolo.md`.
+- `src/lib/fleetSchema.ts` — le regole a cui un veicolo deve obbedire. Ci
+  vive il vincolo del §2: un veicolo `signature` non può avere un prezzo, e
+  se ce l'ha la build si ferma. Coperto da `npm test`.
+
+La cartella `test/` è esclusa da `astro check`: i test usano le API di Node e
+verificarne i tipi richiederebbe `@types/node`, che è una dipendenza in più.
+Girano comunque con `npm test`.
 
 ## Variabili d'ambiente
 
