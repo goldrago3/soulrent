@@ -33,6 +33,8 @@ Da Astro 7 `astro dev` gira in background: `npx astro dev status`,
 - `src/lib/site.ts` — dati aziendali. Tutti i `[TODO]` da riempire stanno qui.
 - `src/content/fleet/` — un file markdown per veicolo. Aggiungerne uno non
   richiede di toccare il codice: vedi `docs/aggiungere-un-veicolo.md`.
+- `src/content/itineraries/` — un file markdown per itinerario. Vedi
+  `docs/aggiungere-un-itinerario.md`.
 - `src/lib/fleetSchema.ts` — le regole a cui un veicolo deve obbedire. Ci
   vive il vincolo del §2: un veicolo `signature` non può avere un prezzo, e
   se ce l'ha la build si ferma. Coperto da `npm test`.
