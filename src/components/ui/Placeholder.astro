@@ -19,10 +19,10 @@ const { ratio, label, class: className } = Astro.props;
 ---
 
 <div
-  class:list={['relative overflow-hidden bg-shade', className]}
+  class:list={['surface-shade relative overflow-hidden', className]}
   style={`aspect-ratio: ${ratio};`}
 >
   <div class="absolute inset-0 flex items-center justify-center px-5 py-6">
-    <p class="max-w-prose text-center text-small text-ink">{label}</p>
+    <p class="max-w-prose text-center text-small">{label}</p>
   </div>
 </div>

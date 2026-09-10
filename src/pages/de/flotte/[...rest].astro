@@ -1,0 +1,13 @@
+---
+import type { GetStaticPaths } from 'astro';
+import FleetRoute from '../../../components/fleet/FleetRoute.astro';
+import { fleetStaticPaths, type FleetRouteProps } from '../../../lib/fleet';
+
+// Indice, pagine di categoria e schede della flotta, in de.
+// I percorsi escono dai file in src/content/fleet: nessun elenco da aggiornare.
+export const getStaticPaths = (async () => fleetStaticPaths('de')) satisfies GetStaticPaths;
+
+type Props = FleetRouteProps;
+---
+
+<FleetRoute lang="de" {...Astro.props} />

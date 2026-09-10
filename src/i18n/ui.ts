@@ -117,6 +117,65 @@ const it = {
   'stub.text': '[TODO: contenuto di questa pagina — arriva in una sessione successiva]',
   'stub.description': '[TODO copy: meta description di questa pagina, 150–160 caratteri]',
 
+  /* Flotta · pagine indice */
+  'fleet.eyebrow': '[TODO copy: occhiello pagina flotta, 2-3 parole]',
+  'fleet.title': '[TODO copy: titolo pagina flotta, 3-6 parole]',
+  'fleet.intro': '[TODO copy: una riga di apertura della pagina flotta, max 120 caratteri]',
+  'fleet.all': 'Tutta la flotta',
+  'fleet.empty': 'Non ci sono ancora veicoli in questa categoria.',
+  'fleet.count.one': 'veicolo',
+  'fleet.count.many': 'veicoli',
+
+  /* Flotta · scheda veicolo */
+  'fleet.year': 'Anno',
+  'fleet.specs': 'Specifiche',
+  'fleet.spec.alimentazione': 'Alimentazione',
+  'fleet.spec.cambio': 'Cambio',
+  'fleet.spec.posti': 'Posti',
+  'fleet.spec.bagagli': 'Bagagli',
+  'fleet.spec.potenza': 'Potenza',
+  'fleet.unit.hp': 'cv',
+  'fleet.fuel.benzina': 'Benzina',
+  'fleet.fuel.diesel': 'Diesel',
+  'fleet.fuel.ibrida': 'Ibrida',
+  'fleet.fuel.elettrica': 'Elettrica',
+  'fleet.gearbox.manuale': 'Manuale',
+  'fleet.gearbox.automatico': 'Automatico',
+
+  /* Flotta · cosa è incluso */
+  'fleet.included': 'Cosa è incluso',
+  'fleet.incluso.consegna': 'Consegna dove sei',
+  'fleet.incluso.ritiro': 'Ritiro a fine noleggio',
+  'fleet.incluso.secondoConducente': 'Secondo conducente',
+  'fleet.incluso.assistenza': 'Assistenza diretta',
+  'fleet.incluso.chilometriIllimitati': 'Chilometri illimitati',
+  'fleet.incluso.pienoCarburante': 'Pieno di carburante',
+  'fleet.incluso.skipper': 'Skipper a bordo',
+  'fleet.incluso.attrezzatura': 'Attrezzatura di bordo',
+  'fleet.incluso.assicurazione': 'Assicurazione',
+
+  /* Flotta · requisiti e prezzo */
+  'fleet.requirements': 'Requisiti del conducente',
+  'fleet.req.age': 'Età minima',
+  'fleet.req.licence': 'Anni di patente',
+  'fleet.unit.years': 'anni',
+  'fleet.price.from': 'da',
+  'fleet.price.perDay': 'al giorno',
+  'fleet.price.note': '[TODO copy: cosa comprende il prezzo indicativo e cosa no, una riga]',
+
+  /* Flotta · galleria e correlati */
+  'fleet.gallery.label': 'Fotografie del veicolo',
+  'fleet.gallery.previous': 'Fotografia precedente',
+  'fleet.gallery.next': 'Fotografia successiva',
+  'fleet.gallery.goTo': 'Vai alla fotografia',
+  'fleet.gallery.position': 'di',
+  'fleet.related': 'Altri modelli',
+  'fleet.detail.cta': 'Richiedi una consulenza su questo veicolo',
+
+  /* Flotta · avviso veicolo di esempio */
+  'fleet.example.title': 'Veicolo di esempio',
+  'fleet.example.text': 'Questo non è un veicolo reale. Nomi, numeri e testi sono segnaposto, e la scheda serve solo a mostrare come si presenta. Va cancellata prima di andare online.',
+
   /* Footer */
   'footer.explore': 'Esplora',
   'footer.company': 'Studio',
@@ -240,6 +299,65 @@ const en: Dictionary = {
   'stub.text': '[TODO EN: stub.text]',
   'stub.description': '[TODO EN: stub.description]',
 
+  /* Flotta · pagine indice */
+  'fleet.eyebrow': '[TODO EN: fleet.eyebrow]',
+  'fleet.title': '[TODO EN: fleet.title]',
+  'fleet.intro': '[TODO EN: fleet.intro]',
+  'fleet.all': 'The whole fleet',
+  'fleet.empty': 'No vehicles in this category yet.',
+  'fleet.count.one': 'vehicle',
+  'fleet.count.many': 'vehicles',
+
+  /* Flotta · scheda veicolo */
+  'fleet.year': 'Year',
+  'fleet.specs': 'Specifications',
+  'fleet.spec.alimentazione': 'Fuel',
+  'fleet.spec.cambio': 'Transmission',
+  'fleet.spec.posti': 'Seats',
+  'fleet.spec.bagagli': 'Luggage',
+  'fleet.spec.potenza': 'Power',
+  'fleet.unit.hp': 'hp',
+  'fleet.fuel.benzina': 'Petrol',
+  'fleet.fuel.diesel': 'Diesel',
+  'fleet.fuel.ibrida': 'Hybrid',
+  'fleet.fuel.elettrica': 'Electric',
+  'fleet.gearbox.manuale': 'Manual',
+  'fleet.gearbox.automatico': 'Automatic',
+
+  /* Flotta · cosa è incluso */
+  'fleet.included': 'What\'s included',
+  'fleet.incluso.consegna': 'Delivery where you are',
+  'fleet.incluso.ritiro': 'Collection at the end of the rental',
+  'fleet.incluso.secondoConducente': 'Second driver',
+  'fleet.incluso.assistenza': 'Direct support',
+  'fleet.incluso.chilometriIllimitati': 'Unlimited mileage',
+  'fleet.incluso.pienoCarburante': 'Full tank',
+  'fleet.incluso.skipper': 'Skipper on board',
+  'fleet.incluso.attrezzatura': 'On-board equipment',
+  'fleet.incluso.assicurazione': 'Insurance',
+
+  /* Flotta · requisiti e prezzo */
+  'fleet.requirements': 'Driver requirements',
+  'fleet.req.age': 'Minimum age',
+  'fleet.req.licence': 'Years of licence',
+  'fleet.unit.years': 'years',
+  'fleet.price.from': 'from',
+  'fleet.price.perDay': 'per day',
+  'fleet.price.note': '[TODO EN: fleet.price.note]',
+
+  /* Flotta · galleria e correlati */
+  'fleet.gallery.label': 'Vehicle photographs',
+  'fleet.gallery.previous': 'Previous photograph',
+  'fleet.gallery.next': 'Next photograph',
+  'fleet.gallery.goTo': 'Go to photograph',
+  'fleet.gallery.position': 'of',
+  'fleet.related': 'Other models',
+  'fleet.detail.cta': 'Request a consultation about this vehicle',
+
+  /* Flotta · avviso veicolo di esempio */
+  'fleet.example.title': 'Example vehicle',
+  'fleet.example.text': 'This is not a real vehicle. Names, numbers and text are placeholders; the page only shows how a vehicle looks. It must be deleted before going live.',
+
   /* Footer */
   'footer.explore': 'Explore',
   'footer.company': 'Studio',
@@ -358,6 +476,65 @@ const de: Dictionary = {
   'stub.eyebrow': 'In Arbeit',
   'stub.text': '[TODO DE: stub.text]',
   'stub.description': '[TODO DE: stub.description]',
+
+  /* Flotta · pagine indice */
+  'fleet.eyebrow': '[TODO DE: fleet.eyebrow]',
+  'fleet.title': '[TODO DE: fleet.title]',
+  'fleet.intro': '[TODO DE: fleet.intro]',
+  'fleet.all': 'Die ganze Flotte',
+  'fleet.empty': 'In dieser Kategorie gibt es noch keine Fahrzeuge.',
+  'fleet.count.one': 'Fahrzeug',
+  'fleet.count.many': 'Fahrzeuge',
+
+  /* Flotta · scheda veicolo */
+  'fleet.year': 'Baujahr',
+  'fleet.specs': 'Technische Daten',
+  'fleet.spec.alimentazione': 'Antrieb',
+  'fleet.spec.cambio': 'Getriebe',
+  'fleet.spec.posti': 'Sitzplätze',
+  'fleet.spec.bagagli': 'Gepäck',
+  'fleet.spec.potenza': 'Leistung',
+  'fleet.unit.hp': 'PS',
+  'fleet.fuel.benzina': 'Benzin',
+  'fleet.fuel.diesel': 'Diesel',
+  'fleet.fuel.ibrida': 'Hybrid',
+  'fleet.fuel.elettrica': 'Elektrisch',
+  'fleet.gearbox.manuale': 'Schaltgetriebe',
+  'fleet.gearbox.automatico': 'Automatik',
+
+  /* Flotta · cosa è incluso */
+  'fleet.included': 'Inbegriffen',
+  'fleet.incluso.consegna': 'Lieferung, wo Sie sind',
+  'fleet.incluso.ritiro': 'Abholung am Mietende',
+  'fleet.incluso.secondoConducente': 'Zweiter Fahrer',
+  'fleet.incluso.assistenza': 'Direkte Betreuung',
+  'fleet.incluso.chilometriIllimitati': 'Unbegrenzte Kilometer',
+  'fleet.incluso.pienoCarburante': 'Volltank',
+  'fleet.incluso.skipper': 'Skipper an Bord',
+  'fleet.incluso.attrezzatura': 'Bordausrüstung',
+  'fleet.incluso.assicurazione': 'Versicherung',
+
+  /* Flotta · requisiti e prezzo */
+  'fleet.requirements': 'Anforderungen an den Fahrer',
+  'fleet.req.age': 'Mindestalter',
+  'fleet.req.licence': 'Führerscheinbesitz',
+  'fleet.unit.years': 'Jahre',
+  'fleet.price.from': 'ab',
+  'fleet.price.perDay': 'pro Tag',
+  'fleet.price.note': '[TODO DE: fleet.price.note]',
+
+  /* Flotta · galleria e correlati */
+  'fleet.gallery.label': 'Fahrzeugfotos',
+  'fleet.gallery.previous': 'Vorheriges Foto',
+  'fleet.gallery.next': 'Nächstes Foto',
+  'fleet.gallery.goTo': 'Zum Foto',
+  'fleet.gallery.position': 'von',
+  'fleet.related': 'Weitere Modelle',
+  'fleet.detail.cta': 'Beratung zu diesem Fahrzeug anfragen',
+
+  /* Flotta · avviso veicolo di esempio */
+  'fleet.example.title': 'Beispielfahrzeug',
+  'fleet.example.text': 'Dies ist kein echtes Fahrzeug. Namen, Zahlen und Texte sind Platzhalter; die Seite zeigt nur, wie ein Fahrzeug dargestellt wird. Vor dem Livegang löschen.',
 
   /* Footer */
   'footer.explore': 'Entdecken',

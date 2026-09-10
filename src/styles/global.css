@@ -212,6 +212,15 @@
   --color-muted: var(--color-stone-soft);
 }
 
+/* Il grigio dei segnaposto e degli avvisi. Su questo fondo `stone-strong`
+   si ferma a 3.96:1, quindi il testo secondario diventa `ink` (14.11:1). */
+@utility surface-shade {
+  background-color: var(--color-shade);
+  color: var(--color-ink);
+  --focus-ring: var(--color-ink);
+  --color-muted: var(--color-ink);
+}
+
 @utility surface-sea {
   background-color: var(--color-sea);
   color: var(--color-bone);

@@ -37,18 +37,30 @@ interface Props {
   ogImageAlt?: string;
   /** Messaggio di partenza del bottone WhatsApp. Nella home lo scavalca la sezione visibile. */
   whatsapp?: WhatsAppContext;
+  /**
+   * Segmento da appendere al percorso della rotta, per le pagine sotto una
+   * rotta della mappa: la scheda di un veicolo sta sotto `/flotta/auto` e in
+   * tedesco sotto `/de/flotte/autos`, ma il nome del modello non si traduce.
+   * Serve a far restare corretti canonical e hreflang.
+   */
+  suffix?: string;
 }
 
-const { lang, route, title, description, ogImage, ogImageAlt, whatsapp = 'default' } = Astro.props;
+const { lang, route, title, description, ogImage, ogImageAlt, whatsapp = 'default', suffix } = Astro.props;
 const t = useTranslations(lang);
 
 // Astro.site è definito in astro.config.mjs; il fallback serve solo in dev.
 const origin = Astro.site ?? new URL(Astro.url.origin);
 const absolute = (path: string): string => new URL(path, origin).href;
 
-const canonical = absolute(getPath(route, lang));
-const alternates = getAlternates(route);
-const xDefault = absolute(getPath(route, defaultLang));
+const conSuffisso = (path: string): string => (suffix ? `${path}/${suffix}` : path);
+
+const canonical = absolute(conSuffisso(getPath(route, lang)));
+const alternates = getAlternates(route).map((alternate) => ({
+  ...alternate,
+  path: conSuffisso(alternate.path),
+}));
+const xDefault = absolute(conSuffisso(getPath(route, defaultLang)));
 
 const siteName = t('site.name');
 const fullTitle = title.includes(siteName) ? title : `${title} · ${siteName}`;
