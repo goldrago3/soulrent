@@ -1,21 +1,29 @@
 ---
 import { Image } from 'astro:assets';
-import Placeholder from '../ui/Placeholder.astro';
+import Placeholder from './Placeholder.astro';
 import type { Lang } from '../../i18n/routes';
 import { useTranslations } from '../../i18n/ui';
-import type { Vehicle } from '../../lib/fleet';
+
+interface Immagine {
+  src?: ImageMetadata | undefined;
+  alt: Record<Lang, string>;
+}
 
 interface Props {
-  veicolo: Vehicle;
+  /**
+   * Qualsiasi voce di contenuto con un identificativo e delle immagini:
+   * un veicolo, un itinerario. La galleria non ha bisogno di sapere altro.
+   */
+  soggetto: { id: string; data: { immagini: readonly Immagine[] } };
   lang: Lang;
 }
 
-const { veicolo, lang } = Astro.props;
+const { soggetto, lang } = Astro.props;
 const t = useTranslations(lang);
 
-const immagini = veicolo.data.immagini;
+const immagini = soggetto.data.immagini;
 const totale = immagini.length;
-const id = `galleria-${veicolo.id}`;
+const id = `galleria-${soggetto.id}`;
 ---
 
 {/*

@@ -2,7 +2,7 @@
 import Button from '../ui/Button.astro';
 import Eyebrow from '../ui/Eyebrow.astro';
 import FleetCard from './FleetCard.astro';
-import FleetGallery from './FleetGallery.astro';
+import Gallery from '../ui/Gallery.astro';
 import SpecList from './SpecList.astro';
 import { getPath, type Lang } from '../../i18n/routes';
 import { useTranslations } from '../../i18n/ui';
@@ -32,7 +32,7 @@ const indiceCategoria = getPath(categoriaRoute[categoria], lang);
 
 <article>
   <div class="wrap section-y grid gap-12 lg:grid-cols-[3fr_2fr] lg:gap-16">
-    <FleetGallery veicolo={veicolo} lang={lang} />
+    <Gallery soggetto={veicolo} lang={lang} />
 
     <div>
       <a
