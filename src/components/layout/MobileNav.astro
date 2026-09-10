@@ -1,5 +1,6 @@
 ---
 import LangSwitcher from './LangSwitcher.astro';
+import Logo from './Logo.astro';
 import Button from '../ui/Button.astro';
 import { getPath, type Lang, type RouteKey } from '../../i18n/routes';
 import { useTranslations } from '../../i18n/ui';
@@ -37,8 +38,7 @@ const t = useTranslations(lang);
   class="pointer-events-none fixed inset-0 z-50 flex translate-y-2 flex-col overflow-y-auto bg-bone opacity-0 transition-[opacity,transform] duration-400 ease-editorial data-[open]:pointer-events-auto data-[open]:translate-y-0 data-[open]:opacity-100 lg:hidden"
 >
   <div class="wrap flex h-16 shrink-0 items-center justify-between border-b border-line md:h-20">
-    {/* [TODO] logo definitivo: per ora segnaposto testuale */}
-    <span class="font-display text-h3 leading-none">SouLRent</span>
+    <Logo altezza={30} />
     <button
       type="button"
       data-menu-close

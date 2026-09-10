@@ -118,6 +118,8 @@ const preloadedFonts = [instrumentSerif400, inter400, inter500];
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
     <meta name="generator" content={Astro.generator} />
 
     <title>{fullTitle}</title>
@@ -129,6 +131,8 @@ const preloadedFonts = [instrumentSerif400, inter400, inter500];
         <link rel="preload" href={href} as="font" type="font/woff2" crossorigin="anonymous" />
       ))
     }
+    {/* Il marchio nell'header: senza questa riga partirebbe dopo i font. */}
+    <link rel="preload" href="/logo/logo-lockup-horizontal.svg" as="image" type="image/svg+xml" />
 
     {/* hreflang per tutte e tre le lingue più x-default sull'italiano (§7). */}
     {

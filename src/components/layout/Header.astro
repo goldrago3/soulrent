@@ -1,5 +1,6 @@
 ---
 import LangSwitcher from './LangSwitcher.astro';
+import Logo from './Logo.astro';
 import MobileNav from './MobileNav.astro';
 import Button from '../ui/Button.astro';
 import { getPath, type Lang, type RouteKey } from '../../i18n/routes';
@@ -17,9 +18,8 @@ const t = useTranslations(lang);
 
 <header class="sticky top-0 z-40 border-b border-line bg-bone">
   <div data-header-bar class="wrap flex h-16 items-center justify-between gap-6 md:h-20">
-    <a href={getPath('home', lang)} class="font-display text-h3 leading-none text-ink">
-      {/* [TODO] logo definitivo: per ora segnaposto testuale */}
-      SouLRent
+    <a href={getPath('home', lang)} class="inline-flex items-center">
+      <Logo altezza={30} prioritario />
     </a>
 
     <nav aria-label={t('nav.label')} class="hidden lg:block">

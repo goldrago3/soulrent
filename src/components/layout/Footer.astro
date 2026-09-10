@@ -1,6 +1,7 @@
 ---
 import Eyebrow from '../ui/Eyebrow.astro';
 import LangSwitcher from './LangSwitcher.astro';
+import Logo from './Logo.astro';
 import { getPath, type Lang, type RouteKey } from '../../i18n/routes';
 import { useTranslations } from '../../i18n/ui';
 import { footerCompany, footerExplore } from '../../lib/navigation';
@@ -25,8 +26,7 @@ const columns = [
 <footer class="surface-dark">
   <div class="wrap section-y grid gap-12 md:grid-cols-2 lg:grid-cols-4">
     <div class="flex flex-col gap-4">
-      {/* [TODO] logo definitivo: per ora segnaposto testuale */}
-      <span class="font-display text-h3 leading-none">SouLRent</span>
+      <Logo variante="vertical" tone="invert" altezza={104} />
       <p class="text-small text-muted">{t('footer.positioning')}</p>
     </div>
 

@@ -1,0 +1,54 @@
+---
+import type { Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+
+interface Props {
+  /** `lockup` per header e menu, `vertical` per il footer. */
+  variante?: 'lockup' | 'vertical';
+  /** `invert` sulle superfici scure: il marchio va solo in ink o in bone. */
+  tone?: 'default' | 'invert';
+  /** Altezza in pixel. Il minimo del kit è 24 px per il lockup orizzontale. */
+  altezza?: number;
+  /**
+   * Vero per il logo dell'header, che sta sopra la piega ed è fra i primi
+   * elementi disegnati; falso per quello del footer, che può aspettare.
+   */
+  prioritario?: boolean;
+  class?: string | undefined;
+}
+
+const {
+  variante = 'lockup',
+  tone = 'default',
+  altezza = 32,
+  prioritario = false,
+  class: className,
+}: Props = Astro.props;
+const lang = (Astro.currentLocale ?? 'it') as Lang;
+const t = useTranslations(lang);
+
+// I file arrivano dal kit del marchio e restano identici a quelli depositati:
+// non li ricomponiamo e non li ricoloriamo. Sono l'unico punto del progetto
+// in cui `ink` e `bone` compaiono scritti fuori da global.css, ed è corretto
+// così — lì sono il marchio, non una scelta di interfaccia (docs/marchio).
+const file = {
+  lockup: { larghezza: 373.01, altezza: 83.2, nome: 'logo-lockup-horizontal' },
+  vertical: { larghezza: 253.08, altezza: 234, nome: 'logo-lockup-vertical' },
+} as const;
+
+const scelto = file[variante];
+const suffisso = tone === 'invert' ? '-inverse' : '';
+const larghezza = Math.round((scelto.larghezza / scelto.altezza) * altezza);
+---
+
+<img
+  src={`/logo/${scelto.nome}${suffisso}.svg`}
+  alt={t('site.name')}
+  width={larghezza}
+  height={altezza}
+  style={`height:${altezza}px;width:auto`}
+  loading={prioritario ? 'eager' : 'lazy'}
+  fetchpriority={prioritario ? 'high' : 'auto'}
+  decoding={prioritario ? 'sync' : 'async'}
+  class={className}
+/>
