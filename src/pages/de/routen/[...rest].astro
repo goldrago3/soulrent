@@ -1,0 +1,13 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ItineraryRoute from '../../../components/itineraries/ItineraryRoute.astro';
+import { itineraryStaticPaths, type ItineraryRouteProps } from '../../../lib/itineraries';
+
+// Indice e schede degli itinerari, in de.
+// I percorsi escono dai file in src/content/itineraries: nessun elenco da aggiornare.
+export const getStaticPaths = (async () => itineraryStaticPaths()) satisfies GetStaticPaths;
+
+type Props = ItineraryRouteProps;
+---
+
+<ItineraryRoute lang="de" {...Astro.props} />

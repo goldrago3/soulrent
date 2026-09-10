@@ -1,8 +1,9 @@
 ---
 import Eyebrow from '../ui/Eyebrow.astro';
-import Placeholder from '../ui/Placeholder.astro';
+import ItineraryCard from '../itineraries/ItineraryCard.astro';
 import { getPath, type Lang } from '../../i18n/routes';
-import { useTranslations, type UiKey } from '../../i18n/ui';
+import { useTranslations } from '../../i18n/ui';
+import { getItineraries } from '../../lib/itineraries';
 
 interface Props {
   lang: Lang;
@@ -11,14 +12,9 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
-// Provvisorio: dalla sessione dedicata agli itinerari queste tre anteprime
-// arriveranno dalla content collection `itineraries` (§8), non da qui.
-const previews = [
-  { title: 'itineraries.one.title', line: 'itineraries.one.line', media: 'itineraries.one.media' },
-  { title: 'itineraries.two.title', line: 'itineraries.two.line', media: 'itineraries.two.media' },
-  { title: 'itineraries.three.title', line: 'itineraries.three.line', media: 'itineraries.three.media' },
-] as const satisfies readonly { title: UiKey; line: UiKey; media: UiKey }[];
-
+// Le anteprime escono dalla collection: aggiungere un itinerario le aggiorna
+// da solo, senza toccare la home.
+const anteprime = (await getItineraries()).slice(0, 3);
 const href = getPath('itineraries', lang);
 ---
 
@@ -36,17 +32,17 @@ const href = getPath('itineraries', lang);
     </a>
   </div>
 
-  <ul class="mt-16 grid gap-12 md:grid-cols-3 md:gap-8">
-    {
-      previews.map((preview) => (
-        <li>
-          <a href={href} class="block">
-            <Placeholder ratio="3/2" label={t(preview.media)} />
-            <h3 class="mt-6 text-h3">{t(preview.title)}</h3>
-            <p class="mt-3 text-body text-muted">{t(preview.line)}</p>
-          </a>
-        </li>
-      ))
-    }
-  </ul>
+  {
+    anteprime.length === 0 ? (
+      <p class="surface-shade mt-12 max-w-text px-6 py-8 text-body">{t('itineraries.empty')}</p>
+    ) : (
+      <ul class="mt-16 grid gap-12 md:grid-cols-3 md:gap-8">
+        {anteprime.map((itinerario) => (
+          <li>
+            <ItineraryCard itinerario={itinerario} lang={lang} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
 </section>

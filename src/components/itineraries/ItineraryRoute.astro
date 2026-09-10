@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ItineraryDetail from './ItineraryDetail.astro';
+import ItineraryIndex from './ItineraryIndex.astro';
+import type { Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import { getItineraries, type ItineraryRouteProps } from '../../lib/itineraries';
+
+type Props = ItineraryRouteProps & { lang: Lang };
+
+const { lang, ...rotta } = Astro.props;
+const t = useTranslations(lang);
+
+const itinerari = rotta.modo === 'indice' ? await getItineraries() : [];
+
+const meta =
+  rotta.modo === 'scheda'
+    ? {
+        suffix: rotta.itinerario.id,
+        title: rotta.itinerario.data.titolo[lang],
+        description: rotta.itinerario.data.sommario[lang],
+      }
+    : {
+        suffix: undefined,
+        title: t('nav.itineraries'),
+        description: t('itineraries.intro'),
+      };
+---
+
+<BaseLayout
+  lang={lang}
+  route="itineraries"
+  suffix={meta.suffix}
+  title={meta.title}
+  description={meta.description}
+  whatsapp="itineraries"
+>
+  {
+    rotta.modo === 'scheda' ? (
+      <ItineraryDetail itinerario={rotta.itinerario} veicoli={rotta.veicoli} lang={lang} />
+    ) : (
+      <ItineraryIndex lang={lang} itinerari={itinerari} />
+    )
+  }
+</BaseLayout>

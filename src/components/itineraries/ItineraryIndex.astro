@@ -1,0 +1,106 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import ItineraryCard from './ItineraryCard.astro';
+import type { Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import { verticalLabel, verticali, type Itinerary } from '../../lib/itineraries';
+
+interface Props {
+  lang: Lang;
+  itinerari: Itinerary[];
+}
+
+const { lang, itinerari } = Astro.props;
+const t = useTranslations(lang);
+
+// Solo i filtri che hanno qualcosa dietro: un pulsante che non mostra niente
+// è un vicolo cieco.
+const presenti = verticali.filter((v) => itinerari.some((i) => i.data.vertical === v));
+---
+
+<section class="wrap section-y">
+  <Eyebrow>{t('itineraries.eyebrow')}</Eyebrow>
+  <h1 class="mt-6 max-w-text text-h1">{t('nav.itineraries')}</h1>
+  <p class="mt-8 max-w-prose text-lead text-muted">{t('itineraries.intro')}</p>
+
+  {
+    presenti.length > 1 && (
+      <div data-filtri hidden class="mt-14 border-t border-line pt-6">
+        {/*
+          Il filtro compare solo con il JavaScript acceso. Senza, la pagina
+          mostra tutti gli itinerari: meglio una lista intera che dei pulsanti
+          che non fanno niente. Non ci sono rotte per le viste filtrate perché
+          il §7 non le prevede.
+        */}
+        <fieldset>
+          <legend class="sr-only">{t('itineraries.filter')}</legend>
+          <ul class="flex flex-wrap gap-x-8 gap-y-3">
+            <li>
+              <button
+                type="button"
+                data-filtro="tutti"
+                aria-pressed="true"
+                class="border-b pb-1 text-small transition-[color,border-color] duration-400 ease-editorial aria-pressed:border-brass aria-pressed:text-ink border-transparent text-muted hover:text-ink"
+              >
+                {t('itineraries.all')}
+              </button>
+            </li>
+            {presenti.map((vertical) => (
+              <li>
+                <button
+                  type="button"
+                  data-filtro={vertical}
+                  aria-pressed="false"
+                  class="border-b pb-1 text-small transition-[color,border-color] duration-400 ease-editorial aria-pressed:border-brass aria-pressed:text-ink border-transparent text-muted hover:text-ink"
+                >
+                  {t(verticalLabel[vertical])}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </fieldset>
+      </div>
+    )
+  }
+
+  {
+    itinerari.length === 0 ? (
+      <p class="surface-shade mt-12 max-w-text px-6 py-8 text-body">{t('itineraries.empty')}</p>
+    ) : (
+      <ul data-elenco class="mt-16 grid gap-12 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+        {itinerari.map((itinerario) => (
+          <li data-vertical={itinerario.data.vertical}>
+            <ItineraryCard itinerario={itinerario} lang={lang} livello={2} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</section>
+
+<script>
+  // Filtro per tipo di mezzo. JavaScript vanilla, nessuna libreria (§3).
+  const contenitore = document.querySelector<HTMLElement>('[data-filtri]');
+  const elenco = document.querySelector<HTMLElement>('[data-elenco]');
+
+  if (contenitore && elenco) {
+    contenitore.hidden = false;
+
+    const pulsanti = [...contenitore.querySelectorAll<HTMLButtonElement>('[data-filtro]')];
+    const voci = [...elenco.querySelectorAll<HTMLElement>('[data-vertical]')];
+
+    for (const pulsante of pulsanti) {
+      pulsante.addEventListener('click', () => {
+        const scelto = pulsante.dataset.filtro ?? 'tutti';
+
+        for (const altro of pulsanti) {
+          altro.setAttribute('aria-pressed', String(altro === pulsante));
+        }
+
+        for (const voce of voci) {
+          voce.hidden = scelto !== 'tutti' && voce.dataset.vertical !== scelto;
+        }
+      });
+    }
+  }
+</script>

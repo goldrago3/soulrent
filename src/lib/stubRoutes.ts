@@ -17,7 +17,6 @@ import type { UiKey } from '../i18n/ui';
 export const stubRoutes = {
   enquiry: 'nav.enquiry',
   conditions: 'nav.conditions',
-  itineraries: 'nav.itineraries',
   howItWorks: 'nav.howItWorks',
   about: 'nav.about',
   partners: 'nav.partners',

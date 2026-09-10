@@ -1,0 +1,61 @@
+---
+import { Image } from 'astro:assets';
+import Placeholder from '../ui/Placeholder.astro';
+import type { Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import { formattaDurata, itineraryPath, verticalLabel, type Itinerary } from '../../lib/itineraries';
+
+interface Props {
+  itinerario: Itinerary;
+  lang: Lang;
+  /** Negli indici la scheda sta sotto l'h1, quindi è un h2; altrove un h3. */
+  livello?: 2 | 3;
+}
+
+const { itinerario, lang, livello = 3 } = Astro.props;
+const t = useTranslations(lang);
+
+const copertina = itinerario.data.immagini[0];
+const Titolo = `h${livello}` as 'h2' | 'h3';
+---
+
+<article class="group">
+  <a href={itineraryPath(itinerario, lang)} class="block">
+    {
+      copertina?.src ? (
+        <Image
+          src={copertina.src}
+          alt={copertina.alt[lang]}
+          widths={[400, 800]}
+          sizes="(min-width: 1024px) 33vw, 100vw"
+          class="aspect-[3/2] w-full object-cover"
+          loading="lazy"
+        />
+      ) : (
+        copertina && <Placeholder ratio="3/2" label={copertina.alt[lang]} />
+      )
+    }
+
+    <div class="mt-6">
+      {
+        itinerario.data.esempio && (
+          <p class="surface-shade mb-3 inline-block px-3 py-1 text-eyebrow uppercase">
+            {t('itinerary.example.title')}
+          </p>
+        )
+      }
+
+      <Titolo class="text-h3">{itinerario.data.titolo[lang]}</Titolo>
+      <p class="mt-3 text-body text-muted">{itinerario.data.sommario[lang]}</p>
+
+      <p class="mt-4 text-small text-muted">
+        {t(verticalLabel[itinerario.data.vertical])} · {formattaDurata(itinerario.data.durata, t)} ·{' '}
+        {itinerario.data.distanzaKm} {t('itinerary.unit.km')}
+      </p>
+
+      <span class="mt-5 inline-block border-b border-line pb-1 text-small transition-[border-color] duration-400 ease-editorial group-hover:border-ink">
+        {t('verticals.cta')}
+      </span>
+    </div>
+  </a>
+</article>

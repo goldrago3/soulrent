@@ -1,0 +1,113 @@
+---
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import FleetCard from '../fleet/FleetCard.astro';
+import Gallery from '../ui/Gallery.astro';
+import { getPath, type Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import type { Vehicle } from '../../lib/fleet';
+import { formattaDurata, formattaTempo, verticalLabel, type Itinerary } from '../../lib/itineraries';
+
+interface Props {
+  itinerario: Itinerary;
+  veicoli: Vehicle[];
+  lang: Lang;
+}
+
+const { itinerario, veicoli, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const { titolo, sommario, vertical, durata, distanzaKm, tappe, esempio } = itinerario.data;
+
+const dati = [
+  { label: t('itinerary.duration'), valore: formattaDurata(durata, t) },
+  { label: t('itinerary.distance'), valore: `${distanzaKm} ${t('itinerary.unit.km')}` },
+  { label: t('itinerary.vertical'), valore: t(verticalLabel[vertical]) },
+];
+---
+
+<article>
+  <div class="wrap section-y">
+    <div class="max-w-text">
+      <a
+        href={getPath('itineraries', lang)}
+        class="text-eyebrow font-medium uppercase text-muted transition-[color] duration-400 ease-editorial hover:text-ink"
+      >
+        {t('nav.itineraries')}
+      </a>
+      <h1 class="mt-6 text-h1">{titolo[lang]}</h1>
+      <p class="mt-8 text-lead text-muted">{sommario[lang]}</p>
+
+      {
+        esempio && (
+          <aside class="surface-shade mt-8 px-6 py-6">
+            <Eyebrow as="p">{t('itinerary.example.title')}</Eyebrow>
+            <p class="mt-3 text-small">{t('itinerary.example.text')}</p>
+          </aside>
+        )
+      }
+    </div>
+
+    <dl class="mt-14 grid gap-x-10 border-t border-line pt-6 sm:grid-cols-3">
+      {
+        dati.map((dato) => (
+          <div class="flex items-baseline justify-between gap-4 py-2 sm:block">
+            <dt class="text-small text-muted">{dato.label}</dt>
+            <dd class="text-body sm:mt-2">{dato.valore}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <div class="mt-14">
+      {/* Stessa galleria delle schede veicolo: stesso comportamento, stessa tastiera. */}
+      <Gallery soggetto={itinerario} lang={lang} />
+    </div>
+  </div>
+
+  <div class="wrap pb-section md:pb-section-lg">
+    <Eyebrow as="h2">{t('itinerary.stages')}</Eyebrow>
+
+    <ol class="mt-10 max-w-text">
+      {
+        tappe.map((tappa, indice) => (
+          <li class="border-t border-line py-8">
+            <div class="flex flex-wrap items-baseline justify-between gap-4">
+              <h3 class="text-h3">
+                <span class="text-eyebrow uppercase text-muted">
+                  {String(indice + 1).padStart(2, '0')}
+                </span>{' '}
+                {tappa.nome[lang]}
+              </h3>
+              {tappa.tempoMinuti !== undefined && (
+                <p class="text-small text-muted">{formattaTempo(tappa.tempoMinuti, t)}</p>
+              )}
+            </div>
+            <p class="mt-4 max-w-prose text-body text-muted">{tappa.descrizione[lang]}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="mt-14 border-t border-line pt-10">
+      <Button href={getPath('enquiry', lang)}>{t('nav.enquiry')}</Button>
+    </div>
+  </div>
+
+  {
+    veicoli.length > 0 && (
+      <section class="surface-dark">
+        <div class="wrap section-y">
+          <Eyebrow as="h2">{t('itinerary.vehicles')}</Eyebrow>
+          <ul class="mt-12 grid gap-12 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+            {veicoli.map((veicolo) => (
+              <li>
+                <FleetCard veicolo={veicolo} lang={lang} mostraPrezzo={false} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+</article>
