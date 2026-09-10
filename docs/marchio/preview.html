@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SouLRent — set logo</title>
+<style>
+  :root{--ink:#0F1113;--bone:#F4F1EC;--stone:#8A8781;--brass:#B08D57}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bone);color:var(--ink);
+       font:400 16px/1.7 ui-sans-serif,system-ui,-apple-system,sans-serif}
+  .wrap{max-width:1000px;margin:0 auto;padding:72px 32px 120px}
+  h1{font-size:30px;font-weight:400;margin:0 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--stone);font-size:14px;margin:0 0 64px}
+  h2{font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+     color:var(--stone);margin:0 0 20px;padding-bottom:10px;
+     border-bottom:.5px solid rgba(15,17,19,.16)}
+  section{margin-bottom:72px}
+  .row{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-end}
+  .panel{padding:40px;border:.5px solid rgba(15,17,19,.14);flex:1;min-width:280px;
+         display:flex;align-items:center;justify-content:center}
+  .panel.dark{background:var(--ink);border-color:var(--ink)}
+  .cap{font-size:12px;color:var(--stone);margin-top:10px;letter-spacing:.04em}
+  img{display:block}
+  .sizes{display:flex;gap:32px;align-items:flex-end;flex-wrap:wrap}
+  .sizes div{text-align:center}
+  .chip{display:inline-flex;align-items:center;gap:10px;background:var(--ink);
+        color:var(--bone);padding:7px 14px;font-size:13px}
+  table{border-collapse:collapse;width:100%;font-size:14px}
+  td,th{text-align:left;padding:9px 12px;border-bottom:.5px solid rgba(15,17,19,.12)}
+  th{font-weight:500;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+     color:var(--stone)}
+  code{font:13px ui-monospace,SFMono-Regular,monospace;background:rgba(15,17,19,.06);
+       padding:2px 6px}
+  .no{color:#A32D2D}
+  .clear{position:relative;display:inline-block;padding:34px;
+         outline:1px dashed var(--brass);outline-offset:-1px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>SouLRent — set logo</h1>
+<p class="sub">Revisione 1 · settembre 2026 · tutti i tracciati vettoriali, testo in outline</p>
+
+<section>
+  <h2>Lockup orizzontale — uso primario</h2>
+  <div class="row">
+    <div class="panel"><img src="logo-lockup-horizontal.svg" width="360" alt=""></div>
+    <div class="panel dark"><img src="logo-lockup-horizontal-inverse.svg" width="360" alt=""></div>
+  </div>
+  <p class="cap">Header del sito, firma email, documenti, intestazioni.</p>
+</section>
+
+<section>
+  <h2>Lockup verticale</h2>
+  <div class="row">
+    <div class="panel"><img src="logo-lockup-vertical.svg" width="200" alt=""></div>
+    <div class="panel dark"><img src="logo-lockup-vertical-inverse.svg" width="200" alt=""></div>
+  </div>
+  <p class="cap">Biglietti da visita, footer, cartellonistica, packaging.</p>
+</section>
+
+<section>
+  <h2>Monogramma</h2>
+  <div class="row">
+    <div class="panel"><img src="logo-monogram.svg" width="86" alt=""></div>
+    <div class="panel dark"><img src="logo-monogram-inverse.svg" width="86" alt=""></div>
+    <div class="panel" style="padding:0;min-width:200px">
+      <img src="logo-monogram-square.svg" width="200" alt=""></div>
+  </div>
+  <p class="cap">Avatar social, app icon, portachiavi, ricamo, adesivo scafo.
+    Il quadrato pieno è la versione da usare dove serve presenza (avatar, icona).</p>
+</section>
+
+<section>
+  <h2>Wordmark</h2>
+  <div class="row">
+    <div class="panel"><img src="logo-wordmark.svg" width="320" alt=""></div>
+    <div class="panel dark"><img src="logo-wordmark-inverse.svg" width="320" alt=""></div>
+  </div>
+  <p class="cap">Da solo quando il monogramma è già presente altrove nella stessa vista.</p>
+</section>
+
+<section>
+  <h2>Prova a dimensione reale</h2>
+  <div class="sizes">
+    <div><img src="favicon-32.png" width="16"><p class="cap">16 px</p></div>
+    <div><img src="favicon-32.png" width="32"><p class="cap">32 px · favicon</p></div>
+    <div><img src="apple-touch-icon.png" width="60"><p class="cap">60 px</p></div>
+    <div><img src="apple-touch-icon.png" width="120"><p class="cap">120 px · avatar</p></div>
+    <div><img src="logo-lockup-horizontal.svg" height="24"><p class="cap">24 px alt. · header</p></div>
+  </div>
+  <p class="cap">A 16 px il monogramma resta leggibile ma perde l'occhiello.
+    Sotto i 20 px usare il quadrato pieno, mai il monogramma nudo.</p>
+</section>
+
+<section>
+  <h2>Area di rispetto</h2>
+  <div class="row">
+    <div class="panel">
+      <span class="clear"><img src="logo-lockup-horizontal.svg" width="260" alt=""></span>
+    </div>
+  </div>
+  <p class="cap">Margine libero minimo su ogni lato = larghezza dell'asta del monogramma.
+    Nessun elemento, testo o bordo dentro quest'area.</p>
+</section>
+
+<section>
+  <h2>Confronto wordmark — se vuoi cambiare font</h2>
+  <div class="panel" style="justify-content:flex-start">
+    <img src="wordmark-comparison.svg" width="520" alt="">
+  </div>
+  <p class="cap">Il set consegnato usa Instrument Serif. Fraunces è più caldo e
+    ha più carattere; Cormorant Garamond è più classico e più leggero.
+    Tutti e tre sono OFL, quindi utilizzabili in un marchio registrato.</p>
+</section>
+
+<section>
+  <h2>Palette</h2>
+  <table>
+    <tr><th>Token</th><th>Hex</th><th>Uso</th></tr>
+    <tr><td><span class="chip" style="background:#0F1113">&nbsp;</span> ink</td>
+        <td><code>#0F1113</code></td><td>Base. Nero caldo, mai <code>#000000</code></td></tr>
+    <tr><td><span class="chip" style="background:#F4F1EC;color:#0F1113">&nbsp;</span> bone</td>
+        <td><code>#F4F1EC</code></td><td>Superfici chiare, testo su scuro. Mai bianco puro</td></tr>
+    <tr><td><span class="chip" style="background:#1B3A4B">&nbsp;</span> sea</td>
+        <td><code>#1B3A4B</code></td><td>Secondario, sezione mare</td></tr>
+    <tr><td><span class="chip" style="background:#B08D57">&nbsp;</span> brass</td>
+        <td><code>#B08D57</code></td><td>Accento. Max 5% della superficie</td></tr>
+    <tr><td><span class="chip" style="background:#8A8781">&nbsp;</span> stone</td>
+        <td><code>#8A8781</code></td><td>Testo secondario</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Usi vietati</h2>
+  <table>
+    <tr><td class="no">✕</td><td>Ruotare, inclinare o deformare il marchio</td></tr>
+    <tr><td class="no">✕</td><td>Riempirlo con un gradiente, applicare ombre o bagliori</td></tr>
+    <tr><td class="no">✕</td><td>Colorarlo in ottone. L'ottone è un accento di interfaccia, mai il marchio</td></tr>
+    <tr><td class="no">✕</td><td>Cambiare le proporzioni tra monogramma e wordmark nel lockup</td></tr>
+    <tr><td class="no">✕</td><td>Ricomporre il wordmark con un font diverso da quello consegnato</td></tr>
+    <tr><td class="no">✕</td><td>Aggiungere onde, ancore, timoni o profili di isola</td></tr>
+    <tr><td class="no">✕</td><td>Posare il monogramma nudo su una foto senza sufficiente contrasto</td></tr>
+  </table>
+</section>
+
+</div>
+</body>
+</html>
