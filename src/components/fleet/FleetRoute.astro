@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FleetDetail from './FleetDetail.astro';
+import FleetIndex from './FleetIndex.astro';
+import type { Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import { categoriaLabel, categoriaRoute, getFleet, type FleetRouteProps } from '../../lib/fleet';
+
+type Props = FleetRouteProps & { lang: Lang };
+
+const { lang, ...rotta } = Astro.props;
+const t = useTranslations(lang);
+
+// Una sola pagina per i tre casi: indice, categoria e scheda condividono
+// intestazione, hreflang e struttura, e differiscono solo nel contenuto.
+const veicoli = rotta.modo === 'scheda' ? [] : await getFleet(rotta.modo === 'categoria' ? rotta.categoria : undefined);
+
+const meta =
+  rotta.modo === 'scheda'
+    ? {
+        route: categoriaRoute[rotta.veicolo.data.categoria],
+        suffix: rotta.veicolo.id,
+        title: rotta.veicolo.data.nome,
+        description: rotta.veicolo.data.posizionamento[lang],
+      }
+    : rotta.modo === 'categoria'
+      ? {
+          route: categoriaRoute[rotta.categoria],
+          suffix: undefined,
+          title: t(categoriaLabel[rotta.categoria]),
+          description: t('fleet.intro'),
+        }
+      : {
+          route: 'fleet' as const,
+          suffix: undefined,
+          title: t('fleet.title'),
+          description: t('fleet.intro'),
+        };
+---
+
+<BaseLayout
+  lang={lang}
+  route={meta.route}
+  suffix={meta.suffix}
+  title={meta.title}
+  description={meta.description}
+  whatsapp="fleet"
+>
+  {
+    rotta.modo === 'scheda' ? (
+      <FleetDetail veicolo={rotta.veicolo} correlati={rotta.altri} lang={lang} />
+    ) : (
+      <FleetIndex
+        lang={lang}
+        categoria={rotta.modo === 'categoria' ? rotta.categoria : undefined}
+        veicoli={veicoli}
+      />
+    )
+  }
+</BaseLayout>

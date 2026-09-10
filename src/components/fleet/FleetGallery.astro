@@ -1,0 +1,195 @@
+---
+import { Image } from 'astro:assets';
+import Placeholder from '../ui/Placeholder.astro';
+import type { Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import type { Vehicle } from '../../lib/fleet';
+
+interface Props {
+  veicolo: Vehicle;
+  lang: Lang;
+}
+
+const { veicolo, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const immagini = veicolo.data.immagini;
+const totale = immagini.length;
+const id = `galleria-${veicolo.id}`;
+---
+
+{/*
+  Nessuna libreria esterna (§12). Senza JavaScript resta un carosello che si
+  scorre con il dito o con le frecce quando ha il focus: le scorciatoie
+  aggiuntive — pulsanti e miniature — compaiono solo se il JavaScript c'è,
+  così non restano comandi che non fanno niente.
+*/}
+<section data-gallery aria-roledescription="carousel" aria-label={t('fleet.gallery.label')}>
+  <div class="relative">
+    <ul
+      id={id}
+      data-gallery-track
+      tabindex="0"
+      class="flex snap-x snap-mandatory overflow-x-auto scroll-smooth"
+    >
+      {
+        immagini.map((immagine, indice) => (
+          <li
+            data-gallery-slide
+            class="w-full shrink-0 snap-center"
+            aria-label={`${indice + 1} ${t('fleet.gallery.position')} ${totale}`}
+          >
+            {immagine.src ? (
+              <Image
+                src={immagine.src}
+                alt={immagine.alt[lang]}
+                widths={[480, 800, 1200]}
+                sizes="(min-width: 1024px) 60vw, 100vw"
+                class="aspect-[3/2] w-full object-cover"
+                loading={indice === 0 ? 'eager' : 'lazy'}
+              />
+            ) : (
+              <Placeholder ratio="3/2" label={immagine.alt[lang]} />
+            )}
+          </li>
+        ))
+      }
+    </ul>
+
+    {
+      totale > 1 && (
+        <div data-gallery-arrows hidden>
+          <button
+            type="button"
+            data-gallery-prev
+            aria-controls={id}
+            class="absolute top-1/2 left-4 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-sm bg-bone text-ink"
+          >
+            <span class="sr-only">{t('fleet.gallery.previous')}</span>
+            <svg aria-hidden="true" focusable="false" width="10" height="16" viewBox="0 0 10 16" fill="none">
+              <path d="M9 1 2 8l7 7" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            data-gallery-next
+            aria-controls={id}
+            class="absolute top-1/2 right-4 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-sm bg-bone text-ink"
+          >
+            <span class="sr-only">{t('fleet.gallery.next')}</span>
+            <svg aria-hidden="true" focusable="false" width="10" height="16" viewBox="0 0 10 16" fill="none">
+              <path d="m1 1 7 7-7 7" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          </button>
+        </div>
+      )
+    }
+  </div>
+
+  {
+    totale > 1 && (
+      <div class="mt-4 flex items-center justify-between gap-6">
+        <ul data-gallery-thumbs hidden class="flex flex-wrap gap-2">
+          {immagini.map((immagine, indice) => (
+            <li>
+              <button
+                type="button"
+                data-gallery-thumb={indice}
+                aria-controls={id}
+                aria-current={indice === 0 ? 'true' : undefined}
+                class="h-11 w-16 bg-shade transition-[opacity] duration-400 ease-editorial aria-[current]:outline aria-[current]:outline-2 aria-[current]:outline-offset-2 aria-[current]:outline-ink"
+              >
+                <span class="sr-only">
+                  {t('fleet.gallery.goTo')} {indice + 1}
+                </span>
+                {immagine.src && (
+                  <Image src={immagine.src} alt="" widths={[128]} class="h-full w-full object-cover" loading="lazy" />
+                )}
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <p class="text-small text-muted" aria-live="polite">
+          <span data-gallery-current>1</span> {t('fleet.gallery.position')} {totale}
+        </p>
+      </div>
+    )
+  }
+</section>
+
+<script>
+  // Un solo script per tutte le gallerie della pagina.
+  for (const gallery of document.querySelectorAll<HTMLElement>('[data-gallery]')) {
+    const track = gallery.querySelector<HTMLElement>('[data-gallery-track]');
+    const slides = [...gallery.querySelectorAll<HTMLElement>('[data-gallery-slide]')];
+    if (!track || slides.length < 2) continue;
+
+    const arrows = gallery.querySelector<HTMLElement>('[data-gallery-arrows]');
+    const thumbs = gallery.querySelector<HTMLElement>('[data-gallery-thumbs]');
+    const counter = gallery.querySelector<HTMLElement>('[data-gallery-current]');
+    const thumbButtons = [...gallery.querySelectorAll<HTMLButtonElement>('[data-gallery-thumb]')];
+
+    // I comandi esistono solo ora: senza JavaScript non erano visibili.
+    if (arrows) arrows.hidden = false;
+    if (thumbs) thumbs.hidden = false;
+
+    let corrente = 0;
+
+    const vaiA = (indice: number) => {
+      const scelto = Math.max(0, Math.min(slides.length - 1, indice));
+      const slide = slides[scelto];
+      if (!slide) return;
+      track.scrollTo({ left: slide.offsetLeft - track.offsetLeft });
+    };
+
+    const aggiorna = (indice: number) => {
+      corrente = indice;
+      if (counter) counter.textContent = String(indice + 1);
+      thumbButtons.forEach((button, posizione) => {
+        if (posizione === indice) button.setAttribute('aria-current', 'true');
+        else button.removeAttribute('aria-current');
+      });
+    };
+
+    gallery.querySelector('[data-gallery-prev]')?.addEventListener('click', () => vaiA(corrente - 1));
+    gallery.querySelector('[data-gallery-next]')?.addEventListener('click', () => vaiA(corrente + 1));
+
+    thumbButtons.forEach((button, indice) => {
+      button.addEventListener('click', () => vaiA(indice));
+    });
+
+    // Con il focus sul carosello le frecce spostano di una foto per volta,
+    // invece dei pochi pixel dello scorrimento nativo.
+    track.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        vaiA(corrente + 1);
+      } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        vaiA(corrente - 1);
+      } else if (event.key === 'Home') {
+        event.preventDefault();
+        vaiA(0);
+      } else if (event.key === 'End') {
+        event.preventDefault();
+        vaiA(slides.length - 1);
+      }
+    });
+
+    // La foto corrente la decide ciò che si vede, non chi ha premuto cosa:
+    // così il conteggio resta giusto anche scorrendo con il dito.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const indice = slides.indexOf(entry.target as HTMLElement);
+          if (indice >= 0) aggiorna(indice);
+        }
+      },
+      { root: track, threshold: 0.6 },
+    );
+
+    for (const slide of slides) observer.observe(slide);
+  }
+</script>

@@ -1,0 +1,40 @@
+---
+import type { Lang } from '../../i18n/routes';
+import { useTranslations, type UiKey } from '../../i18n/ui';
+import { alimentazioneLabel, cambioLabel, type Vehicle } from '../../lib/fleet';
+
+interface Props {
+  veicolo: Vehicle;
+  lang: Lang;
+}
+
+const { veicolo, lang } = Astro.props;
+const t = useTranslations(lang);
+const { specifiche, anno } = veicolo.data;
+
+// Le voci assenti spariscono: una barca non ha il cambio, una moto non ha
+// il bagagliaio. Meglio una riga in meno che una riga con scritto "—".
+const righe: { label: UiKey; valore: string }[] = [
+  { label: 'fleet.year', valore: String(anno) },
+  { label: 'fleet.spec.alimentazione', valore: t(alimentazioneLabel[specifiche.alimentazione]) },
+  ...(specifiche.cambio ? [{ label: 'fleet.spec.cambio' as UiKey, valore: t(cambioLabel[specifiche.cambio]) }] : []),
+  { label: 'fleet.spec.posti', valore: String(specifiche.posti) },
+  ...(specifiche.bagagli !== undefined
+    ? [{ label: 'fleet.spec.bagagli' as UiKey, valore: String(specifiche.bagagli) }]
+    : []),
+  ...(specifiche.potenza !== undefined
+    ? [{ label: 'fleet.spec.potenza' as UiKey, valore: `${specifiche.potenza} ${t('fleet.unit.hp')}` }]
+    : []),
+];
+---
+
+<dl class="grid gap-px sm:grid-cols-2">
+  {
+    righe.map((riga) => (
+      <div class="flex items-baseline justify-between gap-4 border-t border-line py-4">
+        <dt class="text-small text-muted">{t(riga.label)}</dt>
+        <dd class="text-body">{riga.valore}</dd>
+      </div>
+    ))
+  }
+</dl>

@@ -1,0 +1,128 @@
+---
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import FleetCard from './FleetCard.astro';
+import FleetGallery from './FleetGallery.astro';
+import SpecList from './SpecList.astro';
+import { getPath, type Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import {
+  categoriaLabel,
+  categoriaRoute,
+  enquiryPath,
+  formattaPrezzo,
+  prezzoVisibile,
+  voceInclusaTesto,
+  type Vehicle,
+} from '../../lib/fleet';
+
+interface Props {
+  veicolo: Vehicle;
+  correlati: Vehicle[];
+  lang: Lang;
+}
+
+const { veicolo, correlati, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const { categoria, nome, posizionamento, incluso, requisiti, esempio } = veicolo.data;
+const prezzo = prezzoVisibile(veicolo);
+const indiceCategoria = getPath(categoriaRoute[categoria], lang);
+---
+
+<article>
+  <div class="wrap section-y grid gap-12 lg:grid-cols-[3fr_2fr] lg:gap-16">
+    <FleetGallery veicolo={veicolo} lang={lang} />
+
+    <div>
+      <a
+        href={indiceCategoria}
+        class="text-eyebrow font-medium uppercase text-muted transition-[color] duration-400 ease-editorial hover:text-ink"
+      >
+        {t(categoriaLabel[categoria])}
+      </a>
+
+      <h1 class="mt-6 text-h2">{nome}</h1>
+      <p class="mt-6 text-lead text-muted">{posizionamento[lang]}</p>
+
+      {
+        esempio && (
+          <aside class="surface-shade mt-8 px-6 py-6">
+            <Eyebrow as="p">{t('fleet.example.title')}</Eyebrow>
+            <p class="mt-3 text-small">{t('fleet.example.text')}</p>
+          </aside>
+        )
+      }
+
+      {
+        prezzo !== undefined && (
+          <p class="mt-8 text-body">
+            {t('fleet.price.from')} {formattaPrezzo(prezzo, lang)} {t('fleet.price.perDay')}
+            <span class="mt-2 block text-small text-muted">{t('fleet.price.note')}</span>
+          </p>
+        )
+      }
+
+      {/* Il form riceve il veicolo già scelto: chi arriva qui non lo riscrive (§9). */}
+      <Button href={enquiryPath(veicolo, lang)} class="mt-10">{t('fleet.detail.cta')}</Button>
+    </div>
+  </div>
+
+  <div class="wrap grid gap-12 pb-section md:grid-cols-2 md:gap-x-8 lg:grid-cols-3 md:pb-section-lg">
+    <section>
+      <Eyebrow as="h2">{t('fleet.specs')}</Eyebrow>
+      <div class="mt-6">
+        <SpecList veicolo={veicolo} lang={lang} />
+      </div>
+    </section>
+
+    <section>
+      <Eyebrow as="h2">{t('fleet.included')}</Eyebrow>
+      <ul class="mt-6">
+        {
+          incluso.map((voce) => (
+            <li class="border-t border-line py-4 text-body">{voceInclusaTesto(voce, lang, t)}</li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section>
+      <Eyebrow as="h2">{t('fleet.requirements')}</Eyebrow>
+      <dl class="mt-6">
+        <div class="flex items-baseline justify-between gap-4 border-t border-line py-4">
+          <dt class="text-small text-muted">{t('fleet.req.age')}</dt>
+          <dd class="text-body">{requisiti.etaMinima}</dd>
+        </div>
+        <div class="flex items-baseline justify-between gap-4 border-t border-line py-4">
+          <dt class="text-small text-muted">{t('fleet.req.licence')}</dt>
+          <dd class="text-body">
+            {requisiti.anniPatente} {t('fleet.unit.years')}
+          </dd>
+        </div>
+      </dl>
+    </section>
+  </div>
+
+  {
+    correlati.length > 0 && (
+      <section class="surface-dark">
+        <div class="wrap section-y">
+          <Eyebrow as="h2">{t('fleet.related')}</Eyebrow>
+          <ul class="mt-12 grid gap-12 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+            {correlati.map((altro) => (
+              <li>
+                {/*
+                  Qui i prezzi non si mostrano. È un blocco per continuare a
+                  guardare, non un listino: un prezzo accanto a un veicolo che
+                  per regola non ne ha invita al confronto che il §2 evita.
+                */}
+                <FleetCard veicolo={altro} lang={lang} mostraPrezzo={false} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+</article>

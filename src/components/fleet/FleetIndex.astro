@@ -1,0 +1,69 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import FleetCard from './FleetCard.astro';
+import { getPath, type Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import { categorie, categoriaLabel, categoriaRoute, type Categoria, type Vehicle } from '../../lib/fleet';
+
+interface Props {
+  lang: Lang;
+  /** Assente sulla pagina che mostra tutta la flotta. */
+  categoria?: Categoria;
+  veicoli: Vehicle[];
+}
+
+const { lang, categoria, veicoli } = Astro.props;
+const t = useTranslations(lang);
+
+const titolo = categoria ? t(categoriaLabel[categoria]) : t('fleet.title');
+
+const filtri = [
+  { href: getPath('fleet', lang), etichetta: t('fleet.all'), attivo: categoria === undefined },
+  ...categorie.map((c) => ({
+    href: getPath(categoriaRoute[c], lang),
+    etichetta: t(categoriaLabel[c]),
+    attivo: categoria === c,
+  })),
+];
+---
+
+<section class="wrap section-y">
+  <Eyebrow>{t('fleet.eyebrow')}</Eyebrow>
+  <h1 class="mt-6 max-w-text text-h1">{titolo}</h1>
+  <p class="mt-8 max-w-prose text-lead text-muted">{t('fleet.intro')}</p>
+
+  <nav aria-label={t('fleet.title')} class="mt-14 border-t border-line pt-6">
+    <ul class="flex flex-wrap gap-x-8 gap-y-3">
+      {
+        filtri.map((filtro) => (
+          <li>
+            <a
+              href={filtro.href}
+              aria-current={filtro.attivo ? 'page' : undefined}
+              class:list={[
+                'border-b pb-1 text-small transition-[color,border-color] duration-400 ease-editorial',
+                filtro.attivo ? 'border-brass text-ink' : 'border-transparent text-muted hover:text-ink',
+              ]}
+            >
+              {filtro.etichetta}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  {
+    veicoli.length === 0 ? (
+      <p class="surface-shade mt-12 max-w-text px-6 py-8 text-body">{t('fleet.empty')}</p>
+    ) : (
+      <ul class="mt-16 grid gap-12 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+        {veicoli.map((veicolo) => (
+          <li>
+            <FleetCard veicolo={veicolo} lang={lang} livello={2} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</section>

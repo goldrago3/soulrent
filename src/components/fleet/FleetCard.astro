@@ -1,0 +1,75 @@
+---
+import { Image } from 'astro:assets';
+import Placeholder from '../ui/Placeholder.astro';
+import type { Lang } from '../../i18n/routes';
+import { useTranslations } from '../../i18n/ui';
+import { formattaPrezzo, prezzoVisibile, vehiclePath, type Vehicle } from '../../lib/fleet';
+
+interface Props {
+  veicolo: Vehicle;
+  lang: Lang;
+  /** Falso dove il prezzo sarebbe rumore, per esempio fra i modelli correlati. */
+  mostraPrezzo?: boolean;
+  /**
+   * Livello del titolo. Negli indici la scheda sta sotto l'h1 della pagina,
+   * quindi è un h2; fra i modelli correlati sta sotto l'h2 del blocco, quindi
+   * è un h3. Saltare un livello fa perdere la struttura a chi usa uno
+   * screen reader.
+   */
+  livello?: 2 | 3;
+}
+
+const { veicolo, lang, mostraPrezzo = true, livello = 3 } = Astro.props;
+const Titolo = `h${livello}` as 'h2' | 'h3';
+const t = useTranslations(lang);
+
+const copertina = veicolo.data.immagini[0];
+// `prezzoVisibile` è l'unico modo di leggere un prezzo: sui `signature`
+// restituisce sempre undefined, qualunque cosa dica il file (§2).
+const prezzo = mostraPrezzo ? prezzoVisibile(veicolo) : undefined;
+---
+
+<article class="group">
+  <a href={vehiclePath(veicolo, lang)} class="block">
+    {
+      copertina?.src ? (
+        <Image
+          src={copertina.src}
+          alt={copertina.alt[lang]}
+          widths={[400, 800]}
+          sizes="(min-width: 1024px) 33vw, 100vw"
+          class="aspect-[3/2] w-full object-cover"
+          loading="lazy"
+        />
+      ) : (
+        copertina && <Placeholder ratio="3/2" label={copertina.alt[lang]} />
+      )
+    }
+
+    <div class="mt-6">
+      {
+        veicolo.data.esempio && (
+          <p class="surface-shade mb-3 inline-block px-3 py-1 text-eyebrow uppercase">
+            {t('fleet.example.title')}
+          </p>
+        )
+      }
+
+      <Titolo class="text-h3">{veicolo.data.nome}</Titolo>
+      <p class="mt-3 text-body text-muted">{veicolo.data.posizionamento[lang]}</p>
+
+      {
+        prezzo !== undefined && (
+          <p class="mt-4 text-small">
+            {t('fleet.price.from')} <span class="text-body">{formattaPrezzo(prezzo, lang)}</span>{' '}
+            {t('fleet.price.perDay')}
+          </p>
+        )
+      }
+
+      <span class="mt-5 inline-block border-b border-line pb-1 text-small transition-[border-color] duration-400 ease-editorial group-hover:border-ink">
+        {t('verticals.cta')}
+      </span>
+    </div>
+  </a>
+</article>
