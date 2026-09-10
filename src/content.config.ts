@@ -1,6 +1,7 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { fleetSchema } from './lib/fleetSchema';
+import { itinerarySchema } from './lib/itinerarySchema';
 
 /**
  * Collezioni di contenuto.
@@ -16,4 +17,9 @@ const fleet = defineCollection({
   schema: ({ image }) => fleetSchema(image),
 });
 
-export const collections = { fleet };
+const itineraries = defineCollection({
+  loader: glob({ pattern: ['**/*.md', '!**/_*.md'], base: './src/content/itineraries' }),
+  schema: ({ image }) => itinerarySchema(image, reference),
+});
+
+export const collections = { fleet, itineraries };
